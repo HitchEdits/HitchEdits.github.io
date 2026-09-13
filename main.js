@@ -54,8 +54,7 @@ addEventListener("resize", () => { measure(); draw(); });
 
 /* ── Dialogue waveform ─────────────────────────────────────── */
 
-const wave = document.getElementById("wave");
-if (wave) {
+document.querySelectorAll(".wave").forEach(wave => {
   // Deterministic pseudo-noise, looks like speech, same every load.
   let seed = 7;
   const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
@@ -68,7 +67,7 @@ if (wave) {
             width="${(gap * 0.55).toFixed(1)}" height="${h.toFixed(1)}"
             rx="1" opacity="${(0.35 + env * 0.5).toFixed(2)}"/>`;
   }).join("");
-}
+});
 
 /* ── Grade wipe ────────────────────────────────────────────── */
 

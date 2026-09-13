@@ -205,8 +205,7 @@ body {
    Empty slots fall back to SMPTE bars, so nothing looks broken. */
 
 .media,
-.monitor,
-.angle {
+.monitor {
   position: relative;
   margin: 0;
   background: var(--panel);
@@ -215,8 +214,7 @@ body {
   overflow: hidden;
 }
 
-.media,
-.angle {
+.media {
   aspect-ratio: 16/9;
 }
 
@@ -269,8 +267,7 @@ body {
 .monitor-screen:empty::before,
 [data-yt=""]>.monitor-screen::before,
 .media[data-yt=""]::before,
-.media[data-img=""]::before,
-.angle[data-img=""]::before {
+.media[data-img=""]::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -282,7 +279,6 @@ body {
 
 .media[data-yt=""]::after,
 .media[data-img=""]::after,
-.angle[data-img=""]::after,
 [data-yt=""]>.monitor-screen::after {
   content: "NO MEDIA LINKED";
   position: absolute;
@@ -295,8 +291,7 @@ body {
 }
 
 /* Captions sit on the frame, like a burnt-in slate. */
-.media>figcaption,
-.angle>figcaption {
+.media>figcaption {
   position: absolute;
   z-index: 2;
   left: 0;
@@ -625,24 +620,66 @@ body {
   background: var(--amber);
 }
 
-/* 07: one big angle, three small, not a neat grid */
-.angles {
-  display: grid;
-  gap: .55rem;
-  margin-top: 2.5rem;
-  grid-template-columns: repeat(3, 1fr);
+.sync {
+  list-style: none;
+  position: relative;
+  margin: 2.5rem 0 0;
+  padding: 1rem 0;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
 }
 
-/* Master shot runs full width, the other three sit under it. */
-/* Master shot runs full width; amber edge marks it as the live angle. */
-.angle.a1 {
-  grid-column: 1 / -1;
-  aspect-ratio: 21/9;
-  border-color: rgba(240, 169, 59, .5);
+.sync li {
+  display: flex;
+  align-items: center;
+  gap: .9rem;
+  padding: .35rem 1.25rem;
 }
 
-.angle>figcaption {
-  padding-top: 1.75rem;
+.sync b {
+  flex: 0 0 3.5rem;
+  font: 500 .64rem/1 var(--mono);
+  color: var(--dim);
+}
+
+.sync .wave {
+  flex: 1;
+  height: 1.6rem;
+  margin: 0;
+}
+
+.sync time {
+  flex: 0 0 7.5rem;
+  text-align: right;
+  font: 400 .62rem/1 var(--mono);
+  letter-spacing: .06em;
+  color: var(--dim);
+}
+
+/* Same audio, but each camera's mic sat a different distance away. */
+.sync li:nth-child(2) .wave {
+  scale: 1 .72;
+}
+
+.sync li:nth-child(3) .wave {
+  scale: 1 .52;
+}
+
+.sync li:nth-child(4) .wave {
+  scale: 1 .86;
+}
+
+/* The point every angle is locked to. */
+.sync::after {
+  content: "";
+  position: absolute;
+  top: .5rem;
+  bottom: .5rem;
+  left: 38%;
+  width: 2px;
+  background: var(--amber);
+  box-shadow: 0 0 12px var(--amber);
 }
 
 /* 08: the timeline, drawn in CSS */
@@ -836,12 +873,15 @@ body {
     padding: 1.25rem 1.35rem;
   }
 
-  .angles {
-    grid-template-columns: repeat(2, 1fr);
+  /* Keep the source timecodes, they carry the point of the section. */
+  .sync time {
+    flex-basis: 4.75rem;
+    font-size: .55rem;
   }
 
-  .angle.a1 {
-    aspect-ratio: 16/9;
+  .sync li {
+    gap: .5rem;
+    padding: .35rem .75rem;
   }
 
   .nle {
