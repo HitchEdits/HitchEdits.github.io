@@ -1,34 +1,202 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>HitchEdits</title>
-  <style>
-    body { max-width: 38rem; margin: 4rem auto; padding: 0 1.5rem;
-           font: 17px/1.6 Georgia, serif; color: #fdfdfb; background: #201830; }
-    h1 { font-size: 2rem; margin-bottom: .25rem; }
-    h2 { font-size: 1rem; text-transform: uppercase; letter-spacing: .08em;
-         margin-top: 3rem; }
-  </style>
-</head>
-<body>
-  <h1>HitchEdits</h1>
-  <h2>Strong Traits</h2>
-  <ul>
-    <li><strong>Agile Editing</strong> that meets your deadlines and works within your budget.</li>
-    <li><strong>Clean Editing</strong> that is precise and doesn't distract from your message.</li>
-    <li><strong>Adaptable</strong> to your specific needs and preferences.</li>
-    <li><strong>Color Correction</strong> to work with <em>any</em> footage.</li>
-    <li><strong>Audio Experienced</strong> so your video both looks and sounds great.</li>
-    <li><strong>Premiere and Resolve</strong> experienced, for your collaboration needs.</li>
-    <li><strong>Multi-Cam Editing</strong> capable, whether or not the footage is synchronized, or if it spans across multiple days.</li>
-    <li><strong>Readable Timelines</strong> excellent for organization, collaboration, and archive management.</li>
-  </ul>
-  <br></br>
-  <p>Paragraph About Myself As A Person</p>
+  <title>HitchEdits | Video Editor</title>
+  <meta name="description" content="Video editor. Agile, clean, adaptable. Premiere and Resolve.">
+  <meta name="theme-color" content="#07060B">
 
-  <h2>Contact</h2>
-  <p><a href="mailto:HitchEdits@email.com">HitchEdits@email.com</a></p>
+  <meta property="og:title" content="HitchEdits | Video Editor">
+  <meta property="og:description" content="Video editor. Premiere and Resolve.">
+  <meta property="og:type" content="website">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;800&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <a class="skip" href="#reel">Skip to the reel</a>
+
+  <!-- Scroll position, shown as a timecode. Filled by main.js -->
+  <aside class="scrub" aria-hidden="true">
+    <span class="scrub-tc" id="tc">00:00:00:00</span>
+    <span class="scrub-track"><span class="scrub-fill" id="scrubFill"></span></span>
+    <span class="scrub-label">SEQ 01 / PORTFOLIO</span>
+  </aside>
+
+  <header class="hero">
+    <p class="eyebrow">Video editor · Premiere Pro &amp; DaVinci Resolve</p>
+    <h1 class="wordmark">Hitch<span>Edits</span></h1>
+    <p class="hero-line">[One line about what you edit and who for.]</p>
+
+    <figure class="monitor" id="reel" data-yt="">
+      <figcaption class="monitor-bar">
+        <span class="dot"></span> Program monitor: <strong>SHOWREEL</strong>
+        <span class="monitor-res">1920&times;1080</span>
+      </figcaption>
+      <div class="monitor-screen"></div>
+    </figure>
+
+    <p class="hero-note">Scroll to scrub the sequence &darr;</p>
+  </header>
+
+  <main>
+
+    <!-- 01 -->
+    <section class="clip split" id="agile" data-tc="00:00:22:11">
+      <div class="clip-text">
+        <p class="slug"><b>V1</b> Clip 01</p>
+        <h2>Agile Editing</h2>
+        <p>that meets your deadlines and works within your budget.</p>
+      </div>
+      <figure class="media" data-yt="">
+        <figcaption>[Clip title]</figcaption>
+      </figure>
+    </section>
+
+    <!-- 02 full bleed, copy sits on the frame -->
+    <section class="clip bleed" id="clean" data-tc="00:01:04:19">
+      <figure class="media tall" data-yt="">
+        <figcaption>[Clip title]</figcaption>
+      </figure>
+      <div class="clip-text over">
+        <p class="slug"><b>V1</b> Clip 02</p>
+        <h2>Clean Editing</h2>
+        <p>that is precise and doesn't distract from your message.</p>
+      </div>
+    </section>
+
+    <!-- 03 deliberately off the grid, small square still -->
+    <section class="clip offset" id="adaptable" data-tc="00:01:51:02">
+      <div class="clip-text">
+        <p class="slug"><b>V1</b> Clip 03</p>
+        <h2>Adaptable</h2>
+        <p>to your specific needs and preferences.</p>
+      </div>
+      <figure class="media square" data-img="">
+        <figcaption>[Still]</figcaption>
+      </figure>
+    </section>
+
+    <!-- 04 before/after grade, drag to compare -->
+    <section class="clip grade" id="color" data-tc="00:02:30:00">
+      <div class="clip-text">
+        <p class="slug"><b>V1</b> Clip 04</p>
+        <h2>Color Correction</h2>
+        <p>to work with <em>any</em> footage.</p>
+      </div>
+
+      <figure class="compare">
+        <div class="compare-frame">
+          <img class="compare-after" alt="Graded frame" data-img="">
+          <img class="compare-before" alt="Camera original, ungraded" data-img="">
+        </div>
+        <label class="compare-ctl">
+          <span class="sr">Reveal the ungraded frame</span>
+          <input type="range" min="0" max="100" value="50" id="wipe">
+        </label>
+        <figcaption><b>Camera original</b> &larr; drag &rarr; <b>Graded</b></figcaption>
+      </figure>
+    </section>
+
+    <!-- 05 media first, waveform drawn by main.js -->
+    <section class="clip split flip" id="audio" data-tc="00:03:12:07">
+      <figure class="media" data-yt="">
+        <figcaption>[Clip title]</figcaption>
+      </figure>
+      <div class="clip-text">
+        <p class="slug"><b>A1</b> Clip 05</p>
+        <h2>Audio Experienced</h2>
+        <p>so your video both looks and sounds great.</p>
+        <svg class="wave" id="wave" viewBox="0 0 600 64" preserveAspectRatio="none" aria-hidden="true"></svg>
+      </div>
+    </section>
+
+    <!-- 06 no media, just the two apps -->
+    <section class="clip tools" id="tools" data-tc="00:03:58:22">
+      <div class="clip-text">
+        <p class="slug"><b>V2</b> Clip 06</p>
+        <h2>Premiere and Resolve</h2>
+        <p>experienced, for your collaboration needs.</p>
+      </div>
+      <ul class="apps">
+        <li>Adobe Premiere Pro</li>
+        <li>DaVinci Resolve</li>
+      </ul>
+    </section>
+
+    <!-- 07 asymmetric angle grid -->
+    <section class="clip multicam" id="multicam" data-tc="00:04:44:15">
+      <div class="clip-text">
+        <p class="slug"><b>V1&ndash;V4</b> Clip 07</p>
+        <h2>Multi-Cam Editing</h2>
+        <p>capable, whether or not the footage is synchronized, or if it spans across
+          multiple days.</p>
+      </div>
+      <div class="angles">
+        <figure class="angle a1" data-img="">
+          <figcaption>CAM A</figcaption>
+        </figure>
+        <figure class="angle" data-img="">
+          <figcaption>CAM B</figcaption>
+        </figure>
+        <figure class="angle" data-img="">
+          <figcaption>CAM C</figcaption>
+        </figure>
+        <figure class="angle" data-img="">
+          <figcaption>CAM D</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- 08 the timeline is drawn in CSS, no asset needed -->
+    <section class="clip bleed timeline-sec" id="timelines" data-tc="00:05:30:00">
+      <div class="clip-text">
+        <p class="slug"><b>SEQ</b> Clip 08</p>
+        <h2>Readable Timelines</h2>
+        <p>excellent for organization, collaboration, and archive management.</p>
+      </div>
+
+      <div class="nle" role="img"
+        aria-label="A tidy editing timeline: four video tracks and two audio tracks, every clip labelled and colour-coded.">
+        <div class="nle-ruler"></div>
+        <ol class="tracks">
+          <li><b>V4</b><span class="lane"><i class="c gfx" style="--x:14;--w:9">LOWER THIRDS</i><i class="c gfx"
+                style="--x:52;--w:12">TITLES</i></span></li>
+          <li><b>V3</b><span class="lane"><i class="c sup" style="--x:6;--w:18">B-ROLL</i><i class="c sup"
+                style="--x:30;--w:11">B-ROLL</i><i class="c sup" style="--x:64;--w:22">B-ROLL</i></span></li>
+          <li><b>V2</b><span class="lane"><i class="c cam" style="--x:0;--w:22">CAM B</i><i class="c cam"
+                style="--x:26;--w:16">CAM C</i><i class="c cam" style="--x:46;--w:31">CAM B</i><i class="c cam"
+                style="--x:81;--w:19">CAM D</i></span></li>
+          <li><b>V1</b><span class="lane"><i class="c cam alt" style="--x:0;--w:100">CAM A / MASTER</i></span></li>
+          <li><b>A1</b><span class="lane"><i class="c aud" style="--x:0;--w:100">DIALOGUE</i></span></li>
+          <li><b>A2</b><span class="lane"><i class="c mus" style="--x:8;--w:40">MUSIC</i><i class="c mus"
+                style="--x:56;--w:38">MUSIC</i></span></li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- His paragraph, deliberately plain after all that chrome -->
+    <section class="about" id="about" data-tc="00:06:18:04">
+      <p class="slug"><b>INFO</b> About</p>
+      <p>[Paragraph About Myself As A Person]</p>
+    </section>
+
+  </main>
+
+  <footer class="export" id="contact" data-tc="00:07:00:00">
+    <h2>Contact</h2>
+    <p class="mailto"><a href="mailto:HitchEdits@email.com">HitchEdits@email.com</a></p>
+    <p class="colophon">HitchEdits · <span id="year"></span></p>
+  </footer>
+
+  <script src="main.js" defer></script>
 </body>
+
 </html>

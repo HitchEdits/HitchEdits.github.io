@@ -1,0 +1,856 @@
+:root {
+  --ink: #07060B;
+  --panel: #100E18;
+  --panel-2: #17141F;
+  --line: #2A2438;
+  --text: #EDEAF2;
+  --dim: #9990AC;
+
+  --violet: #7C4DFF;
+  --violet-lo: #4E23C9;
+  --violet-hi: #C078FF;
+  --amber: #F0A93B;  /* render bar */
+  --green: #45C97F;
+
+  --page: 1180px;
+  --pad: clamp(1.25rem, 4vw, 3rem);
+
+  --sans: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Consolas, monospace;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--text);
+  font: 400 clamp(1rem, 0.95rem + 0.2vw, 1.075rem)/1.65 var(--sans);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+h1,
+h2 {
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+  margin: 0;
+}
+
+p {
+  margin: 0 0 1rem;
+}
+
+b,
+strong {
+  font-weight: 600;
+}
+
+a {
+  color: inherit;
+}
+
+.sr,
+.skip:not(:focus) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip:focus {
+  position: fixed;
+  z-index: 99;
+  top: 1rem;
+  left: 1rem;
+  background: var(--violet);
+  color: #fff;
+  padding: .6rem 1rem;
+  border-radius: 4px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--violet-hi);
+  outline-offset: 3px;
+}
+
+.scrub {
+  position: fixed;
+  z-index: 40;
+  inset: auto 0 0 0;
+  height: 2.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  padding: 0 1.25rem;
+  font: 500 .68rem/1 var(--mono);
+  letter-spacing: .06em;
+  border-top: 1px solid var(--line);
+  background: rgba(7, 6, 11, .92);
+  backdrop-filter: blur(8px);
+}
+
+.scrub-tc {
+  color: var(--amber);
+  font-size: .78rem;
+}
+
+.scrub-track {
+  flex: 1;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--line);
+  position: relative;
+  overflow: hidden;
+}
+
+.scrub-fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  background: linear-gradient(90deg, var(--violet-lo), var(--violet), var(--violet-hi));
+  box-shadow: 0 0 12px var(--violet);
+}
+
+.scrub-label {
+  color: var(--dim);
+  letter-spacing: .22em;
+  font-size: .6rem;
+}
+
+body {
+  padding-bottom: 2.6rem;
+}
+
+
+/* ── Hero ───────────────────────────────────────────────────── */
+
+.hero {
+  position: relative;
+  max-width: var(--page);
+  margin: 0 auto;
+  padding: clamp(4rem, 12vh, 9rem) var(--pad) clamp(3rem, 8vh, 6rem);
+}
+
+/* Light spill off the monitor. The only big use of the gradient. */
+.hero::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: 14%;
+  translate: -50% 0;
+  width: min(1100px, 130vw);
+  aspect-ratio: 16/7;
+  background: radial-gradient(ellipse at 50% 40%,
+      rgba(124, 77, 255, .34), rgba(78, 35, 201, .16) 45%, transparent 72%);
+  filter: blur(20px);
+}
+
+.eyebrow {
+  font: 500 .72rem/1 var(--mono);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 1.5rem;
+}
+
+.wordmark {
+  font-size: clamp(3.4rem, 13vw, 8.5rem);
+  margin-bottom: 1.5rem;
+}
+
+.wordmark span {
+  background: linear-gradient(96deg, var(--violet-hi), var(--violet) 55%, var(--violet-lo));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.hero-line {
+  max-width: 46ch;
+  font-size: clamp(1.1rem, 1rem + .5vw, 1.35rem);
+  color: #C9C2D8;
+  margin-bottom: clamp(2.5rem, 6vh, 4rem);
+}
+
+.hero-note {
+  font: 400 .72rem/1 var(--mono);
+  color: var(--dim);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  margin: 1.75rem 0 0;
+}
+
+
+/* ── Media slots ─────────────────────────────────────────────
+   Empty slots fall back to SMPTE bars, so nothing looks broken. */
+
+.media,
+.monitor,
+.angle {
+  position: relative;
+  margin: 0;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.media,
+.angle {
+  aspect-ratio: 16/9;
+}
+
+.media.square {
+  aspect-ratio: 1;
+}
+
+.media.tall {
+  aspect-ratio: 21/9;
+}
+
+.monitor {
+  border-radius: 7px;
+}
+
+.monitor-bar {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  padding: .6rem .85rem;
+  font: 400 .68rem/1 var(--mono);
+  color: var(--dim);
+  background: var(--panel-2);
+  border-bottom: 1px solid var(--line);
+}
+
+.monitor-bar strong {
+  color: var(--text);
+  font-weight: 500;
+}
+
+.monitor-bar .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 8px var(--green);
+}
+
+.monitor-res {
+  margin-left: auto;
+}
+
+.monitor-screen {
+  aspect-ratio: 16/9;
+  position: relative;
+}
+
+/* The bars themselves. Hard-stop gradient, no image needed. */
+.monitor-screen:empty::before,
+[data-yt=""]>.monitor-screen::before,
+.media[data-yt=""]::before,
+.media[data-img=""]::before,
+.angle[data-img=""]::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg,
+      #9c9c9c 0 14.28%, #9c9a2e 0 28.56%, #2e9c9c 0 42.84%, #2e9c3e 0 57.12%,
+      #9c2e8e 0 71.4%, #9c3030 0 85.68%, #30309c 0 100%);
+  opacity: .16;
+}
+
+.media[data-yt=""]::after,
+.media[data-img=""]::after,
+.angle[data-img=""]::after,
+[data-yt=""]>.monitor-screen::after {
+  content: "NO MEDIA LINKED";
+  position: absolute;
+  inset: auto 0 50% 0;
+  translate: 0 50%;
+  text-align: center;
+  color: var(--dim);
+  font: 400 .66rem/1 var(--mono);
+  letter-spacing: .2em;
+}
+
+/* Captions sit on the frame, like a burnt-in slate. */
+.media>figcaption,
+.angle>figcaption {
+  position: absolute;
+  z-index: 2;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 2.5rem .9rem .7rem;
+  font: 400 .7rem/1.4 var(--mono);
+  color: #D8D2E4;
+  background: linear-gradient(transparent, rgba(7, 6, 11, .88));
+}
+
+/* Click-to-load YouTube facade */
+.media iframe,
+.monitor-screen iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+.play {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* Both pseudos share one grid cell so the triangle sits on the disc. */
+.play::before,
+.play::after {
+  content: "";
+  grid-area: 1 / 1;
+}
+
+.play::before {
+  width: 4.25rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgba(124, 77, 255, .9);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .18), 0 10px 40px rgba(124, 77, 255, .5);
+  transition: scale .18s ease;
+}
+
+.play::after {
+  place-self: center;
+  border-left: 1.1rem solid #fff;
+  border-block: .68rem solid transparent;
+  translate: .18rem 0;
+}
+
+.play:hover::before {
+  scale: 1.08;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .play::before {
+    transition: none;
+  }
+}
+
+
+/* ── Clip sections ──────────────────────────────────────────── */
+
+.clip {
+  max-width: var(--page);
+  margin: 0 auto;
+  padding: clamp(4.5rem, 11vh, 8rem) var(--pad);
+}
+
+.slug {
+  font: 500 .68rem/1 var(--mono);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--dim);
+  margin-bottom: 1.1rem;
+}
+
+.slug b {
+  color: var(--amber);
+  font-weight: 500;
+  border: 1px solid rgba(240, 169, 59, .35);
+  border-radius: 3px;
+  padding: .22rem .4rem;
+  margin-right: .55rem;
+}
+
+.clip h2 {
+  font-size: clamp(1.9rem, 1.2rem + 2.6vw, 3.4rem);
+  margin-bottom: 1.1rem;
+}
+
+/* The description finishes the sentence the heading starts, so it reads as
+   a subtitle rather than body copy. */
+.clip-text p:not(.slug) {
+  max-width: 34ch;
+  color: #C3BCD2;
+  font-size: clamp(1.15rem, 1rem + .55vw, 1.5rem);
+  line-height: 1.45;
+}
+
+.clip-text em {
+  color: var(--violet-hi);
+  font-style: italic;
+}
+
+/* 01 / 05: two up */
+.split {
+  display: grid;
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: center;
+  grid-template-columns: minmax(0, .85fr) minmax(0, 1.15fr);
+}
+
+.split.flip {
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr);
+}
+
+/* 02 / 08: break the container */
+.bleed {
+  max-width: none;
+  padding-inline: 0;
+  position: relative;
+}
+
+.bleed>.media {
+  border-radius: 0;
+  border-inline: 0;
+}
+
+.bleed>.clip-text {
+  max-width: var(--page);
+  margin: 0 auto;
+  padding: 0 var(--pad);
+}
+
+/* Text panel hangs off the bottom of the frame, snapped to the page grid. */
+.bleed>.clip-text.over {
+  position: relative;
+  z-index: 2;
+  width: min(34rem, calc(100% - var(--pad) * 2));
+  margin: -5rem 0 0 max(var(--pad), calc(50% - var(--page) / 2 + var(--pad)));
+  padding: 1.5rem 1.75rem;
+  background: rgba(7, 6, 11, .85);
+  backdrop-filter: blur(10px);
+  border-left: 2px solid var(--violet);
+}
+
+.clip-text.over p:not(.slug) {
+  margin-bottom: 0;
+}
+
+/* Caption moves to the top so the panel can't cover it. */
+.bleed>.media>figcaption {
+  top: 0;
+  bottom: auto;
+  text-align: right;
+  padding: .7rem .95rem 2.5rem;
+  background: linear-gradient(rgba(7, 6, 11, .9), transparent);
+}
+
+/* 03: pushed off-centre on purpose */
+.offset {
+  display: grid;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  grid-template-columns: minmax(0, 1fr) 15rem;
+  align-items: end;
+}
+
+.offset .clip-text {
+  margin-left: clamp(0rem, 9vw, 7rem);
+}
+
+/* 04: grade comparison */
+.grade .compare {
+  margin: 2.5rem 0 0;
+}
+
+.compare-frame {
+  position: relative;
+  aspect-ratio: 21/9;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  overflow: hidden;
+  background: var(--panel);
+}
+
+.compare-frame img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Before sits on top and gets wiped away by the slider. */
+/* Ungraded sits on the left of the handle, matching the caption. */
+.compare-before {
+  clip-path: inset(0 calc(100% - var(--pos, 50%)) 0 0);
+}
+
+.compare-frame::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--pos, 50%);
+  width: 2px;
+  background: var(--violet-hi);
+  box-shadow: 0 0 14px var(--violet);
+}
+
+/* Bars behind whichever image is missing */
+.compare-frame img:not([src]) {
+  opacity: 0;
+}
+
+.compare-frame:has(img:not([src]))::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg,
+      #9c9c9c 0 14.28%, #9c9a2e 0 28.56%, #2e9c9c 0 42.84%, #2e9c3e 0 57.12%,
+      #9c2e8e 0 71.4%, #9c3030 0 85.68%, #30309c 0 100%);
+  opacity: .16;
+}
+
+.compare-ctl {
+  display: block;
+}
+
+#wipe {
+  width: 100%;
+  margin: .85rem 0 0;
+  appearance: none;
+  background: var(--line);
+  height: 2px;
+  border-radius: 2px;
+  cursor: ew-resize;
+}
+
+#wipe::-webkit-slider-thumb {
+  appearance: none;
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 50%;
+  background: var(--violet);
+  border: 2px solid var(--text);
+}
+
+#wipe::-moz-range-thumb {
+  width: 1.15rem;
+  height: 1.15rem;
+  border-radius: 50%;
+  background: var(--violet);
+  border: 2px solid var(--text);
+}
+
+.compare>figcaption {
+  font: 400 .7rem/1 var(--mono);
+  color: var(--dim);
+  letter-spacing: .1em;
+  margin-top: .75rem;
+}
+
+.compare>figcaption b {
+  color: var(--text);
+  font-weight: 400;
+}
+
+/* 05: waveform under the copy */
+.wave {
+  display: block;
+  width: 100%;
+  height: 3.5rem;
+  margin-top: 1.75rem;
+}
+
+.wave rect {
+  fill: var(--violet);
+}
+
+/* 06: narrow, centred, no media at all */
+.tools {
+  max-width: 62rem;
+}
+
+.apps {
+  list-style: none;
+  display: grid;
+  gap: 1px;
+  margin: 2.5rem 0 0;
+  padding: 0;
+  background: var(--line);
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  overflow: hidden;
+}
+
+.apps li {
+  background: var(--panel);
+  padding: 1.5rem;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+/* Software version pip, like a bin item */
+.apps li::before {
+  content: "";
+  display: inline-block;
+  vertical-align: middle;
+  width: .55rem;
+  height: .55rem;
+  border-radius: 2px;
+  margin-right: .7rem;
+  background: var(--violet);
+}
+
+.apps li:last-child::before {
+  background: var(--amber);
+}
+
+/* 07: one big angle, three small, not a neat grid */
+.angles {
+  display: grid;
+  gap: .55rem;
+  margin-top: 2.5rem;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+/* Master shot runs full width, the other three sit under it. */
+/* Master shot runs full width; amber edge marks it as the live angle. */
+.angle.a1 {
+  grid-column: 1 / -1;
+  aspect-ratio: 21/9;
+  border-color: rgba(240, 169, 59, .5);
+}
+
+.angle>figcaption {
+  padding-top: 1.75rem;
+}
+
+/* 08: the timeline, drawn in CSS */
+.nle {
+  margin: 2.75rem auto 0;
+  max-width: var(--page);
+  width: calc(100% - var(--pad) * 2);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 0 0 .5rem;
+  overflow: hidden;
+}
+
+.nle-ruler {
+  height: 1.5rem;
+  border-bottom: 1px solid var(--line);
+  background: var(--panel-2);
+  background-image: repeating-linear-gradient(90deg, var(--line) 0 1px, transparent 1px 3.33%);
+  background-position: 3.5rem 0;
+}
+
+.tracks {
+  list-style: none;
+  margin: 0;
+  padding: .45rem 0 0;
+}
+
+.tracks li {
+  display: flex;
+  align-items: stretch;
+  gap: .5rem;
+  padding: 1px .5rem;
+}
+
+.tracks b {
+  flex: 0 0 3rem;
+  display: grid;
+  place-items: center;
+  font: 500 .64rem/1 var(--mono);
+  color: var(--dim);
+  background: var(--panel-2);
+  border-radius: 3px;
+}
+
+.lane {
+  position: relative;
+  flex: 1;
+  height: 1.9rem;
+}
+
+.c {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--x) * 1%);
+  width: calc(var(--w) * 1% - 2px);
+  display: flex;
+  align-items: center;
+  padding-inline: .5rem;
+  font: 500 .6rem/1 var(--mono);
+  letter-spacing: .08em;
+  font-style: normal;
+  color: rgba(255, 255, 255, .82);
+  border-radius: 3px;
+  overflow: hidden;
+  white-space: nowrap;
+  border-top: 2px solid rgba(255, 255, 255, .16);
+}
+
+.c.cam {
+  background: #3B2E6B;
+}
+
+.c.cam.alt {
+  background: #2F2555;
+}
+
+.c.sup {
+  background: #1E4A55;
+}
+
+.c.gfx {
+  background: #6B4A1F;
+}
+
+.c.aud {
+  background: #23503A;
+}
+
+.c.mus {
+  background: #4A2440;
+}
+
+
+/* ── About: plain on purpose, after all that chrome ────────── */
+
+.about {
+  max-width: 46rem;
+  margin: 0 auto;
+  padding: clamp(5rem, 14vh, 10rem) var(--pad);
+  font-size: clamp(1.2rem, 1rem + .8vw, 1.6rem);
+  line-height: 1.5;
+}
+
+.about p:not(.slug) {
+  color: #D6D0E2;
+}
+
+.about b {
+  color: var(--violet-hi);
+  font-weight: 500;
+}
+
+/* ── Export dialog / contact ────────────────────────────────── */
+
+.export {
+  max-width: var(--page);
+  margin: 0 auto;
+  padding: clamp(3rem, 8vh, 5rem) var(--pad) clamp(4rem, 10vh, 7rem);
+  border-top: 1px solid var(--line);
+}
+
+/* Premiere's render bar, hairline across the top. */
+.export::before {
+  content: "";
+  display: block;
+  height: 3px;
+  margin-bottom: clamp(3rem, 8vh, 5rem);
+  background: linear-gradient(90deg, var(--green) 0 38%, var(--amber) 0 62%, var(--violet) 0 100%);
+}
+
+.export h2 {
+  font-size: clamp(1.8rem, 1.2rem + 2.4vw, 3rem);
+  margin-bottom: 2rem;
+}
+
+.mailto {
+  margin: 0;
+  font-size: clamp(1.35rem, 1rem + 2vw, 2.4rem);
+  font-weight: 600;
+}
+
+.mailto a {
+  color: var(--violet-hi);
+  text-decoration: none;
+  border-bottom: 2px solid rgba(192, 120, 255, .3);
+  padding-bottom: .15em;
+}
+
+.mailto a:hover {
+  border-bottom-color: var(--violet-hi);
+}
+
+.colophon {
+  font: 400 .68rem/1 var(--mono);
+  color: var(--dim);
+  letter-spacing: .12em;
+  margin: 2.5rem 0 0;
+}
+
+
+/* ── Narrow screens ─────────────────────────────────────────── */
+
+@media (max-width: 760px) {
+
+  .split,
+  .split.flip,
+  .offset {
+    grid-template-columns: 1fr;
+  }
+
+  .offset {
+    align-items: start;
+  }
+
+  .offset .clip-text {
+    margin-left: 0;
+  }
+
+  .media.square {
+    max-width: 15rem;
+  }
+
+  .split.flip>.media {
+    order: 2;
+  }
+
+  .bleed>.clip-text.over {
+    margin-top: -2.5rem;
+    padding: 1.25rem 1.35rem;
+  }
+
+  .angles {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .angle.a1 {
+    aspect-ratio: 16/9;
+  }
+
+  .nle {
+    width: 100%;
+    border-radius: 0;
+    border-inline: 0;
+  }
+
+  .tracks b {
+    flex-basis: 2.25rem;
+  }
+}
