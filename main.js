@@ -20,9 +20,14 @@ const tcEl = document.getElementById("tc");
 const fillEl = document.getElementById("scrubFill");
 const headEl = document.getElementById("scrubHead");
 const trackEl = document.getElementById("scrubTrack");
+const tipEl = document.getElementById("scrubTip");
 let marks = [];
+let ticks = [];
 
 const maxScroll = () => Math.max(0, document.documentElement.scrollHeight - innerHeight);
+
+// A section's name for the tick label: data-name if set, otherwise its heading.
+const nameOf = el => el.dataset.name || el.querySelector("h2")?.textContent.trim() || el.id;
 
 // Marks are stored as scroll positions: a section's timecode is hit when its top
 // reaches 40% down the viewport. The top of the page is always 00:00:00:00 and
@@ -31,15 +36,39 @@ function measure() {
   const max = maxScroll();
   const sections = [...document.querySelectorAll("[data-tc]")].map(el => ({
     y: Math.min(Math.max(1, el.getBoundingClientRect().top + scrollY - innerHeight * 0.4), max),
-    f: toFrames(el.dataset.tc)
+    f: toFrames(el.dataset.tc),
+    name: nameOf(el)
   }));
   if (sections.length) sections[sections.length - 1].y = max;
-  marks = [{ y: 0, f: 0 }].concat(sections).sort((a, b) => a.y - b.y);
+  marks = [{ y: 0, f: 0, name: "Showreel" }].concat(sections).sort((a, b) => a.y - b.y);
+
+  // Rebuild the ticks, one per section (not the page top).
+  ticks.forEach(t => t.el.remove());
+  ticks = marks.slice(1).map(m => {
+    const el = document.createElement("span");
+    el.className = "scrub-tick";
+    el.style.left = (max ? m.y / max : 0) * 100 + "%";
+    trackEl.insertBefore(el, headEl);
+    return { el, p: max ? m.y / max : 0 };
+  });
 }
+
+// Which section a 0–1 page position falls in.
+const sectionAt = p => {
+  const y = p * maxScroll();
+  let name = marks[0]?.name;
+  for (const m of marks) if (m.y <= y + 1) name = m.name;
+  return name;
+};
 
 const setHead = p => {
   fillEl.style.width = headEl.style.left = p * 100 + "%";
+  const name = sectionAt(p);
+  if (tipEl.textContent !== name) tipEl.textContent = name;
+  tipEl.style.setProperty("--p", p * 100 + "%");
+  ticks.forEach(t => t.el.classList.toggle("passed", t.p <= p + 0.001));
   trackEl.setAttribute("aria-valuenow", Math.round(p * 100));
+  trackEl.setAttribute("aria-valuetext", `${Math.round(p * 100)}%, ${name}`);
 };
 
 function draw() {
@@ -95,15 +124,23 @@ const seek = p => {
   setHead(target);
   if (!easing) { easing = true; requestAnimationFrame(glide); }
 };
+// Like snapping in an NLE: near a tick, the playhead locks onto the section start.
+// The snap zone is at most 8px, and never more than a quarter of the gap between
+// ticks, so a short track on a phone can still land between sections.
 const seekTo = e => {
   const r = trackEl.getBoundingClientRect();
-  seek((e.clientX - r.left) / r.width);
+  let p = (e.clientX - r.left) / r.width;
+  const gaps = ticks.slice(1).map((t, i) => (t.p - ticks[i].p) * r.width);
+  const snap = Math.min(8, (gaps.length ? Math.min(...gaps) : Infinity) / 4);
+  const near = ticks.find(t => Math.abs(t.p - p) * r.width <= snap);
+  if (near) p = near.p;
+  seek(p);
 };
 
 trackEl.addEventListener("pointerdown", e => {
   if (e.button !== 0) return;
   e.preventDefault(); // no text selection or native drag, which would cancel the pointer
-  trackEl.setPointerCapture(e.pointerId);
+  try { trackEl.setPointerCapture(e.pointerId); } catch { /* synthetic pointer */ }
   trackEl.classList.add("dragging");
   dragging = true;
   seekTo(e);
@@ -161,12 +198,39 @@ document.querySelectorAll(".wave").forEach(wave => {
 
 /* ── Grade wipe ────────────────────────────────────────────── */
 
+// Drag anywhere on the frame. The hidden range input mirrors the position so
+// keyboard and screen-reader users get the same control.
 const wipe = document.getElementById("wipe");
-if (wipe) {
-  const frame = document.querySelector(".compare-frame");
-  const set = () => frame.style.setProperty("--pos", wipe.value + "%");
-  wipe.addEventListener("input", set);
-  set();
+const frame = document.getElementById("compareFrame");
+if (wipe && frame) {
+  const set = v => {
+    v = Math.min(Math.max(v, 0), 100);
+    wipe.value = v;
+    frame.style.setProperty("--pos", v + "%");
+    frame.classList.toggle("at-start", v < 12);
+    frame.classList.toggle("at-end", v > 88);
+  };
+  const fromPointer = e => {
+    const r = frame.getBoundingClientRect();
+    set((e.clientX - r.left) / r.width * 100);
+  };
+
+  let wiping = false;
+  frame.addEventListener("pointerdown", e => {
+    if (e.button !== 0) return;
+    wiping = true;
+    try { frame.setPointerCapture(e.pointerId); } catch { /* synthetic pointer */ }
+    frame.classList.add("dragging");
+    fromPointer(e);
+  });
+  frame.addEventListener("pointermove", e => { if (wiping) fromPointer(e); });
+  const stop = () => { wiping = false; frame.classList.remove("dragging"); };
+  frame.addEventListener("pointerup", stop);
+  frame.addEventListener("pointercancel", stop);
+  frame.addEventListener("lostpointercapture", stop);
+
+  wipe.addEventListener("input", () => set(+wipe.value));
+  set(+wipe.value);
 }
 
 /* ── Media ─────────────────────────────────────────────────────
@@ -214,3 +278,4 @@ document.getElementById("year").textContent = new Date().getFullYear();
 // Fonts shift layout, so re-measure once they land.
 measure(); draw();
 if (document.fonts) document.fonts.ready.then(() => { measure(); draw(); });
+addEventListener("load", () => { measure(); draw(); });

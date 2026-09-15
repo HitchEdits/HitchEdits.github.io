@@ -13,6 +13,13 @@
   <meta property="og:title" content="HitchEdits | Video Editor">
   <meta property="og:description" content="Video editor. Premiere and Resolve.">
   <meta property="og:type" content="website">
+  <!-- Link previews need absolute URLs. Update these if the site moves to a custom domain. -->
+  <meta property="og:url" content="https://hitchedits.github.io/">
+  <meta property="og:image" content="https://hitchedits.github.io/images/og.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="HitchEdits: video editor, Premiere Pro and DaVinci Resolve">
+  <meta name="twitter:card" content="summary_large_image">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -32,6 +39,7 @@
       aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
       <span class="scrub-fill" id="scrubFill"></span>
       <span class="scrub-head" id="scrubHead"></span>
+      <span class="scrub-tip" id="scrubTip" aria-hidden="true"></span>
     </span>
     <span class="scrub-label" aria-hidden="true">SEQ 01 / PORTFOLIO</span>
   </aside>
@@ -98,16 +106,21 @@
         <p>to work with <em>any</em> footage.</p>
       </div>
 
+      <!-- PLACEHOLDER images: swap for a real ungraded/graded pair of the same frame. -->
       <figure class="compare">
-        <div class="compare-frame">
-          <img class="compare-after" alt="Graded frame" data-img="">
-          <img class="compare-before" alt="Camera original, ungraded" data-img="">
+        <div class="compare-frame" id="compareFrame">
+          <img class="compare-after" alt="Graded frame" data-img="images/placeholder-graded.jpg">
+          <img class="compare-before" alt="Camera original, ungraded" data-img="images/placeholder-ungraded.jpg">
+          <span class="compare-tag before" aria-hidden="true">Camera original</span>
+          <span class="compare-tag after" aria-hidden="true">Graded</span>
+          <span class="compare-handle" aria-hidden="true"></span>
         </div>
-        <label class="compare-ctl">
-          <span class="sr">Reveal the ungraded frame</span>
+        <!-- The frame is dragged directly; this range is the keyboard/screen-reader control behind it. -->
+        <label class="compare-ctl sr">
+          <span>Reveal the ungraded frame</span>
           <input type="range" min="0" max="100" value="50" id="wipe">
         </label>
-        <figcaption><b>Camera original</b> &larr; drag &rarr; <b>Graded</b></figcaption>
+        <figcaption>Drag across the frame to compare</figcaption>
       </figure>
     </section>
 
@@ -181,7 +194,7 @@
     </section>
 
     <!-- His paragraph, deliberately plain after all that chrome -->
-    <section class="about" id="about" data-tc="00:06:18:04">
+    <section class="about" id="about" data-tc="00:06:18:04" data-name="About">
       <p class="slug"><b>INFO</b> About</p>
       <p>[Paragraph About Myself As A Person]</p>
     </section>

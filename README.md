@@ -31,7 +31,10 @@ Put the file in an `images/` folder, then point a slot at it:
 ```
 
 The colour-correction section takes two: ungraded goes in `.compare-before`,
-graded in `.compare-after`.
+graded in `.compare-after`. Use the same frame, same size, for both. It
+currently points at `images/placeholder-ungraded.jpg` and
+`images/placeholder-graded.jpg`. Those are generated test images, so replace
+them and delete the files.
 
 ## Empty slots
 
@@ -56,10 +59,19 @@ you scroll, ending on the last section's timecode at the bottom. If you add or
 reorder sections, give them timecodes that keep climbing and it keeps working.
 
 The bar can be dragged (or clicked, or focused and moved with the arrow keys) to
-jump through the page.
+jump through the page. Each section gets a tick on the bar, and its name shows
+above the playhead while scrubbing. The name comes from the section's `<h2>`,
+or from `data-name="..."` if the section has no heading.
 
 ## Logo
 
 `images/logo.jpg` is the favicon. The brand gradient in `styles.css`
 (`--brand-a` / `--brand-b`) was sampled from it. Swap a sharper PNG/SVG in at
 the same path whenever one is available.
+
+## Link preview
+
+`images/og.jpg` (1200×630) is what shows when the site is shared on WhatsApp,
+Discord, iMessage, X, etc. The `og:image` tag in `index.html` uses the full URL
+`https://hitchedits.github.io/images/og.jpg`. If the site moves to a custom
+domain, update that URL and `og:url`.

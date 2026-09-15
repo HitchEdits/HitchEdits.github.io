@@ -178,6 +178,60 @@ a {
   outline-offset: -4px;
 }
 
+/* One tick per section, placed by main.js. Ticks the playhead has passed light up. */
+.scrub-tick {
+  position: absolute;
+  top: 50%;
+  width: 2px;
+  height: 8px;
+  translate: -50% -50%;
+  border-radius: 1px;
+  background: var(--dim);
+  opacity: .55;
+  pointer-events: none;
+}
+
+.scrub-tick.passed {
+  background: var(--brand-hi);
+  opacity: 1;
+}
+
+.scrub-head {
+  z-index: 1;
+}
+
+/* Section name that rides above the playhead while scrubbing. */
+.scrub-tip {
+  position: absolute;
+  bottom: calc(100% + .4rem);
+  left: clamp(4.5rem, var(--p, 0%), calc(100% - 4.5rem));
+  padding: .4rem .6rem;
+  font: 500 .66rem/1 var(--mono);
+  letter-spacing: .08em;
+  white-space: nowrap;
+  color: var(--text);
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  opacity: 0;
+  translate: -50% .25rem;
+  transition: opacity .15s ease, translate .15s ease;
+  pointer-events: none;
+}
+
+.scrub-track.dragging .scrub-tip,
+.scrub-track:focus-visible .scrub-tip {
+  opacity: 1;
+  translate: -50% 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scrub-tip,
+  .scrub-head {
+    transition: none;
+  }
+}
+
 .scrub-label {
   color: var(--dim);
   letter-spacing: .22em;
@@ -520,6 +574,7 @@ body {
   margin: 2.5rem 0 0;
 }
 
+/* Drag anywhere on the frame. pan-y keeps vertical page scrolling working on touch. */
 .compare-frame {
   position: relative;
   aspect-ratio: 21/9;
@@ -527,6 +582,16 @@ body {
   border-radius: 5px;
   overflow: hidden;
   background: var(--panel);
+  cursor: ew-resize;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.compare-frame:has(#wipe:focus-visible),
+.compare:has(#wipe:focus-visible) .compare-frame {
+  outline: 2px solid var(--brand-hi);
+  outline-offset: 3px;
 }
 
 .compare-frame img {
@@ -535,22 +600,92 @@ body {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  pointer-events: none;
+  -webkit-user-drag: none;
 }
 
-/* Before sits on top and gets wiped away by the slider. */
-/* Ungraded sits on the left of the handle, matching the caption. */
+/* Ungraded sits on top, on the left of the handle, and is wiped away to the right. */
 .compare-before {
   clip-path: inset(0 calc(100% - var(--pos, 50%)) 0 0);
 }
 
-.compare-frame::after {
-  content: "";
+/* The wipe line with a grab knob in the middle. */
+.compare-handle {
   position: absolute;
+  z-index: 2;
   top: 0;
   bottom: 0;
   left: var(--pos, 50%);
   width: 2px;
+  translate: -50% 0;
   background: var(--text);
+}
+
+.compare-handle::before,
+.compare-handle::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  translate: -50% -50%;
+}
+
+.compare-handle::before {
+  width: 2.5rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--brand-grad);
+  border: 2px solid var(--text);
+  transition: scale .15s ease;
+}
+
+/* ◂▸ arrows */
+.compare-handle::after {
+  width: 1.1rem;
+  height: .7rem;
+  background:
+    conic-gradient(from 60deg at 0 50%, var(--text) 60deg, transparent 0) left / 45% 100% no-repeat,
+    conic-gradient(from 240deg at 100% 50%, var(--text) 60deg, transparent 0) right / 45% 100% no-repeat;
+}
+
+.compare-frame:hover .compare-handle::before,
+.compare-frame.dragging .compare-handle::before {
+  scale: 1.1;
+}
+
+.compare-tag {
+  position: absolute;
+  z-index: 1;
+  top: .75rem;
+  padding: .3rem .5rem;
+  font: 500 .66rem/1 var(--mono);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--text);
+  background: rgba(7, 6, 11, .7);
+  border-radius: 3px;
+  transition: opacity .2s ease;
+}
+
+.compare-tag.before {
+  left: .75rem;
+}
+
+.compare-tag.after {
+  right: .75rem;
+}
+
+/* Hide a tag once the wipe has covered it. */
+.compare-frame.at-start .compare-tag.before,
+.compare-frame.at-end .compare-tag.after {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .compare-handle::before,
+  .compare-tag {
+    transition: none;
+  }
 }
 
 /* Bars behind whichever image is missing */
@@ -568,47 +703,11 @@ body {
   opacity: .16;
 }
 
-.compare-ctl {
-  display: block;
-}
-
-#wipe {
-  width: 100%;
-  margin: .85rem 0 0;
-  appearance: none;
-  background: var(--line);
-  height: 2px;
-  border-radius: 2px;
-  cursor: ew-resize;
-}
-
-#wipe::-webkit-slider-thumb {
-  appearance: none;
-  width: 1.15rem;
-  height: 1.15rem;
-  border-radius: 50%;
-  background: var(--brand-grad);
-  border: 2px solid var(--text);
-}
-
-#wipe::-moz-range-thumb {
-  width: 1.15rem;
-  height: 1.15rem;
-  border-radius: 50%;
-  background: var(--brand-grad);
-  border: 2px solid var(--text);
-}
-
 .compare>figcaption {
   font: 400 .7rem/1 var(--mono);
   color: var(--dim);
   letter-spacing: .1em;
   margin-top: .75rem;
-}
-
-.compare>figcaption b {
-  color: var(--text);
-  font-weight: 400;
 }
 
 /* 05: waveform under the copy */
@@ -888,6 +987,11 @@ body {
 /* ── Narrow screens ─────────────────────────────────────────── */
 
 @media (max-width: 760px) {
+
+  /* Give the scrub track the room; the label is decoration. */
+  .scrub-label {
+    display: none;
+  }
 
   .split,
   .split.flip,
