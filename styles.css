@@ -4,14 +4,17 @@
   --panel-2: #17141F;
   --line: #2A2438;
   --text: #EDEAF2;
+  --text-2: #CFC8DC; /* subtitles and body copy */
   --dim: #9990AC;
 
-  --violet: #7C4DFF;
-  --violet-lo: #4E23C9;
-  --violet-hi: #C078FF;
-  /* Sampled from images/logo.jpg: magenta top-left, violet bottom-right. */
+  /* Brand, sampled from images/logo.jpg: magenta top-left, violet bottom-right.
+     The gradient is his logo, so it's used like one: wordmark, playhead, play
+     button, links. Everything else stays neutral and nothing glows. */
   --brand-a: #C0309A;
   --brand-b: #7A3FC0;
+  --brand-hi: #D48BE6; /* light tint for text and thin lines on the dark ground */
+  --brand-grad: linear-gradient(135deg, var(--brand-a), var(--brand-b));
+
   --amber: #F0A93B;  /* render bar */
   --green: #45C97F;
 
@@ -83,14 +86,14 @@ a {
   z-index: 99;
   top: 1rem;
   left: 1rem;
-  background: var(--violet);
+  background: var(--brand-b);
   color: #fff;
   padding: .6rem 1rem;
   border-radius: 4px;
 }
 
 :focus-visible {
-  outline: 2px solid var(--violet-hi);
+  outline: 2px solid var(--brand-hi);
   outline-offset: 3px;
 }
 
@@ -195,19 +198,16 @@ body {
   padding: clamp(4rem, 12vh, 9rem) var(--pad) clamp(3rem, 8vh, 6rem);
 }
 
-/* Light spill off the monitor. The only big use of the gradient. */
+/* The logo's gradient as a dark wash behind the hero: same diagonal, same two
+   colours, kept low so it reads as a tint, not a glow. */
 .hero::before {
   content: "";
   position: absolute;
   z-index: -1;
-  left: 50%;
-  top: 14%;
-  translate: -50% 0;
-  width: min(1100px, 130vw);
-  aspect-ratio: 16/7;
-  background: radial-gradient(ellipse at 50% 40%,
-      rgba(124, 77, 255, .34), rgba(78, 35, 201, .16) 45%, transparent 72%);
-  filter: blur(20px);
+  inset: 0 calc(50% - 50vw);
+  background: linear-gradient(135deg, rgba(192, 48, 154, .16), rgba(122, 63, 192, .2) 55%, transparent 85%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 50%, transparent);
+  mask-image: linear-gradient(to bottom, #000 50%, transparent);
 }
 
 .eyebrow {
@@ -233,7 +233,7 @@ body {
 .hero-line {
   max-width: 46ch;
   font-size: clamp(1.1rem, 1rem + .5vw, 1.35rem);
-  color: #C9C2D8;
+  color: var(--text-2);
   margin-bottom: clamp(2.5rem, 6vh, 4rem);
 }
 
@@ -296,7 +296,6 @@ body {
   height: 7px;
   border-radius: 50%;
   background: var(--green);
-  box-shadow: 0 0 8px var(--green);
 }
 
 .monitor-res {
@@ -344,7 +343,7 @@ body {
   bottom: 0;
   padding: 2.5rem .9rem .7rem;
   font: 400 .7rem/1.4 var(--mono);
-  color: #D8D2E4;
+  color: var(--text-2);
   background: linear-gradient(transparent, rgba(7, 6, 11, .88));
 }
 
@@ -381,8 +380,8 @@ body {
   width: 4.25rem;
   aspect-ratio: 1;
   border-radius: 50%;
-  background: rgba(124, 77, 255, .9);
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, .18), 0 10px 40px rgba(124, 77, 255, .5);
+  background: var(--brand-grad);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .22);
   transition: scale .18s ease;
 }
 
@@ -438,13 +437,13 @@ body {
    a subtitle rather than body copy. */
 .clip-text p:not(.slug) {
   max-width: 34ch;
-  color: #C3BCD2;
+  color: var(--text-2);
   font-size: clamp(1.15rem, 1rem + .55vw, 1.5rem);
   line-height: 1.45;
 }
 
 .clip-text em {
-  color: var(--violet-hi);
+  color: var(--brand-hi);
   font-style: italic;
 }
 
@@ -487,7 +486,8 @@ body {
   padding: 1.5rem 1.75rem;
   background: rgba(7, 6, 11, .85);
   backdrop-filter: blur(10px);
-  border-left: 2px solid var(--violet);
+  border-left: 2px solid;
+  border-image: linear-gradient(var(--brand-a), var(--brand-b)) 1;
 }
 
 .clip-text.over p:not(.slug) {
@@ -550,8 +550,7 @@ body {
   bottom: 0;
   left: var(--pos, 50%);
   width: 2px;
-  background: var(--violet-hi);
-  box-shadow: 0 0 14px var(--violet);
+  background: var(--text);
 }
 
 /* Bars behind whichever image is missing */
@@ -588,7 +587,7 @@ body {
   width: 1.15rem;
   height: 1.15rem;
   border-radius: 50%;
-  background: var(--violet);
+  background: var(--brand-grad);
   border: 2px solid var(--text);
 }
 
@@ -596,7 +595,7 @@ body {
   width: 1.15rem;
   height: 1.15rem;
   border-radius: 50%;
-  background: var(--violet);
+  background: var(--brand-grad);
   border: 2px solid var(--text);
 }
 
@@ -621,7 +620,7 @@ body {
 }
 
 .wave rect {
-  fill: var(--violet);
+  fill: var(--brand-hi);
 }
 
 /* 06: narrow, centred, no media at all */
@@ -658,7 +657,7 @@ body {
   height: .55rem;
   border-radius: 2px;
   margin-right: .7rem;
-  background: var(--violet);
+  background: var(--brand-grad);
 }
 
 .apps li:last-child::before {
@@ -724,7 +723,6 @@ body {
   left: 38%;
   width: 2px;
   background: var(--amber);
-  box-shadow: 0 0 12px var(--amber);
 }
 
 /* 08: the timeline, drawn in CSS */
@@ -831,11 +829,11 @@ body {
 }
 
 .about p:not(.slug) {
-  color: #D6D0E2;
+  color: var(--text-2);
 }
 
 .about b {
-  color: var(--violet-hi);
+  color: var(--brand-hi);
   font-weight: 500;
 }
 
@@ -854,7 +852,7 @@ body {
   display: block;
   height: 3px;
   margin-bottom: clamp(3rem, 8vh, 5rem);
-  background: linear-gradient(90deg, var(--green) 0 38%, var(--amber) 0 62%, var(--violet) 0 100%);
+  background: linear-gradient(90deg, var(--green) 0 38%, var(--amber) 0 62%, var(--brand-b) 0 100%);
 }
 
 .export h2 {
@@ -869,14 +867,14 @@ body {
 }
 
 .mailto a {
-  color: var(--violet-hi);
+  color: var(--brand-hi);
   text-decoration: none;
-  border-bottom: 2px solid rgba(192, 120, 255, .3);
+  border-bottom: 2px solid rgba(212, 139, 230, .3);
   padding-bottom: .15em;
 }
 
 .mailto a:hover {
-  border-bottom-color: var(--violet-hi);
+  border-bottom-color: var(--brand-hi);
 }
 
 .colophon {

@@ -47,7 +47,7 @@ function draw() {
   // While seeking, the playhead belongs to the pointer; the page catches up to it.
   if (target === null) setHead(max > 0 ? Math.min(scrollY / max, 1) : 0);
 
-  const y = scrollY;
+  const y = scrollY >= max - 1 ? max : scrollY; // sub-pixel scroll heights never quite reach max
   let i = marks.findIndex(m => m.y > y);
   if (i === -1) i = marks.length;
   const a = marks[i - 1] || marks[0];
