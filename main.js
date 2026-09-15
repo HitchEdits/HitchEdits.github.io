@@ -37,11 +37,15 @@ function measure() {
   marks = [{ y: 0, f: 0 }].concat(sections).sort((a, b) => a.y - b.y);
 }
 
-function draw() {
-  const max = maxScroll();
-  const p = max > 0 ? Math.min(scrollY / max, 1) : 0;
+const setHead = p => {
   fillEl.style.width = headEl.style.left = p * 100 + "%";
   trackEl.setAttribute("aria-valuenow", Math.round(p * 100));
+};
+
+function draw() {
+  const max = maxScroll();
+  // While seeking, the playhead belongs to the pointer; the page catches up to it.
+  if (target === null) setHead(max > 0 ? Math.min(scrollY / max, 1) : 0);
 
   const y = scrollY;
   let i = marks.findIndex(m => m.y > y);
@@ -53,25 +57,73 @@ function draw() {
   tcEl.textContent = toTC(Math.max(0, f));
 }
 
-// Drag (or click) anywhere on the track to jump the page there.
-// "instant" overrides the smooth scroll-behavior so the page keeps up with the pointer.
-const seek = p => scrollTo({ top: Math.min(Math.max(p, 0), 1) * maxScroll(), behavior: "instant" });
+/* Drag (or click) the track to scrub. The playhead snaps to the pointer and the
+   page eases after it every frame, so the timecode rolls instead of jumping. */
+
+const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
+let target = null;   // 0–1 while seeking, null otherwise
+let dragging = false;
+let easing = false;
+let lastSet = null;  // where glide last put the page, to notice the user scrolling over it
+
+function glide() {
+  // Stop if seeking was released, or someone scrolled the page themselves mid-glide.
+  if (target === null || (lastSet !== null && Math.abs(scrollY - lastSet) > 3)) {
+    easing = false; lastSet = null;
+    if (!dragging) target = null;
+    draw();
+    return;
+  }
+  const goal = target * maxScroll();
+  const d = goal - scrollY;
+  // Browsers round scroll positions, so finish within 2px rather than chasing sub-pixels forever.
+  if (Math.abs(d) < 2 || reduceMotion.matches) {
+    scrollTo({ top: goal, behavior: "instant" });
+    easing = false; lastSet = null;
+    if (!dragging) target = null;
+    draw();
+    return;
+  }
+  // "instant" overrides html's smooth scroll-behavior; the easing here replaces it.
+  scrollTo({ top: scrollY + d * 0.2, behavior: "instant" });
+  lastSet = scrollY;
+  requestAnimationFrame(glide);
+}
+
+const seek = p => {
+  target = Math.min(Math.max(p, 0), 1);
+  setHead(target);
+  if (!easing) { easing = true; requestAnimationFrame(glide); }
+};
 const seekTo = e => {
   const r = trackEl.getBoundingClientRect();
   seek((e.clientX - r.left) / r.width);
 };
 
 trackEl.addEventListener("pointerdown", e => {
+  if (e.button !== 0) return;
+  e.preventDefault(); // no text selection or native drag, which would cancel the pointer
   trackEl.setPointerCapture(e.pointerId);
   trackEl.classList.add("dragging");
+  dragging = true;
   seekTo(e);
 });
 trackEl.addEventListener("pointermove", e => {
-  if (trackEl.hasPointerCapture(e.pointerId)) seekTo(e);
+  if (dragging) seekTo(e);
 });
-const endDrag = () => trackEl.classList.remove("dragging");
+const endDrag = () => {
+  dragging = false;
+  trackEl.classList.remove("dragging");
+  if (!easing) target = null;
+};
 trackEl.addEventListener("pointerup", endDrag);
 trackEl.addEventListener("pointercancel", endDrag);
+trackEl.addEventListener("lostpointercapture", endDrag);
+
+// Wheel or touch scrolling takes the page back from the scrubber.
+const release = () => { if (!dragging) target = null; };
+addEventListener("wheel", release, { passive: true });
+addEventListener("touchstart", e => { if (!trackEl.contains(e.target)) release(); }, { passive: true });
 
 trackEl.addEventListener("keydown", e => {
   const p = scrollY / (maxScroll() || 1);
