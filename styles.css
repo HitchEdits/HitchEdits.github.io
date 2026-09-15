@@ -9,6 +9,9 @@
   --violet: #7C4DFF;
   --violet-lo: #4E23C9;
   --violet-hi: #C078FF;
+  /* Sampled from images/logo.jpg: magenta top-left, violet bottom-right. */
+  --brand-a: #C0309A;
+  --brand-b: #7A3FC0;
   --amber: #F0A93B;  /* render bar */
   --green: #45C97F;
 
@@ -113,21 +116,61 @@ a {
   font-size: .78rem;
 }
 
+/* Drag it like a playhead. The visible line is 2px; the hit area is the full bar height. */
 .scrub-track {
   flex: 1;
+  align-self: stretch;
+  position: relative;
+  cursor: grab;
+  touch-action: none;
+}
+
+.scrub-track::before {
+  content: "";
+  position: absolute;
+  inset: 50% 0 auto 0;
   height: 2px;
+  translate: 0 -50%;
   border-radius: 2px;
   background: var(--line);
-  position: relative;
-  overflow: hidden;
+}
+
+.scrub-track.dragging {
+  cursor: grabbing;
 }
 
 .scrub-fill {
   position: absolute;
-  inset: 0 auto 0 0;
+  top: 50%;
+  left: 0;
+  height: 2px;
+  translate: 0 -50%;
   width: 0;
-  background: linear-gradient(90deg, var(--violet-lo), var(--violet), var(--violet-hi));
-  box-shadow: 0 0 12px var(--violet);
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--brand-a), var(--brand-b));
+}
+
+.scrub-head {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 10px;
+  height: 10px;
+  translate: -50% -50%;
+  border-radius: 50%;
+  background: var(--text);
+  border: 2px solid var(--brand-b);
+  transition: scale .15s ease;
+}
+
+.scrub-track:hover .scrub-head,
+.scrub-track:focus-visible .scrub-head,
+.scrub-track.dragging .scrub-head {
+  scale: 1.4;
+}
+
+.scrub-track:focus-visible {
+  outline-offset: -4px;
 }
 
 .scrub-label {
@@ -179,7 +222,7 @@ body {
 }
 
 .wordmark span {
-  background: linear-gradient(96deg, var(--violet-hi), var(--violet) 55%, var(--violet-lo));
+  background: linear-gradient(96deg, var(--brand-a), var(--brand-b));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;

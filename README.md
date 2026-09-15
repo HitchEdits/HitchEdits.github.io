@@ -51,5 +51,15 @@ Anything in `[square brackets]` is waiting on you:
 ## The timecodes
 
 Each section carries a `data-tc` attribute. The readout in the bottom bar
-interpolates between them as you scroll, so if you add or reorder sections, give
-them timecodes that keep climbing and it keeps working.
+starts at `00:00:00:00` at the top of the page and interpolates between them as
+you scroll, ending on the last section's timecode at the bottom. If you add or
+reorder sections, give them timecodes that keep climbing and it keeps working.
+
+The bar can be dragged (or clicked, or focused and moved with the arrow keys) to
+jump through the page.
+
+## Logo
+
+`images/logo.jpg` is the favicon. The brand gradient in `styles.css`
+(`--brand-a` / `--brand-b`) was sampled from it. Swap a sharper PNG/SVG in at
+the same path whenever one is available.

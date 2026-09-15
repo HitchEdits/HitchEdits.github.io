@@ -7,6 +7,8 @@
   <title>HitchEdits | Video Editor</title>
   <meta name="description" content="Video editor. Agile, clean, adaptable. Premiere and Resolve.">
   <meta name="theme-color" content="#07060B">
+  <link rel="icon" type="image/jpeg" href="images/logo.jpg">
+  <link rel="apple-touch-icon" href="images/logo.jpg">
 
   <meta property="og:title" content="HitchEdits | Video Editor">
   <meta property="og:description" content="Video editor. Premiere and Resolve.">
@@ -24,10 +26,14 @@
   <a class="skip" href="#reel">Skip to the reel</a>
 
   <!-- Scroll position, shown as a timecode. Filled by main.js -->
-  <aside class="scrub" aria-hidden="true">
-    <span class="scrub-tc" id="tc">00:00:00:00</span>
-    <span class="scrub-track"><span class="scrub-fill" id="scrubFill"></span></span>
-    <span class="scrub-label">SEQ 01 / PORTFOLIO</span>
+  <aside class="scrub">
+    <span class="scrub-tc" id="tc" aria-hidden="true">00:00:00:00</span>
+    <span class="scrub-track" id="scrubTrack" role="slider" tabindex="0" aria-label="Page position"
+      aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+      <span class="scrub-fill" id="scrubFill"></span>
+      <span class="scrub-head" id="scrubHead"></span>
+    </span>
+    <span class="scrub-label" aria-hidden="true">SEQ 01 / PORTFOLIO</span>
   </aside>
 
   <header class="hero">
@@ -43,7 +49,7 @@
       <div class="monitor-screen"></div>
     </figure>
 
-    <p class="hero-note">Scroll to scrub the sequence &darr;</p>
+    <p class="hero-note">Scroll, or drag the bar below, to scrub the sequence &darr;</p>
   </header>
 
   <main>

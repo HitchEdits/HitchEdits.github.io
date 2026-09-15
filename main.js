@@ -18,23 +18,32 @@ const toTC = n => {
 
 const tcEl = document.getElementById("tc");
 const fillEl = document.getElementById("scrubFill");
+const headEl = document.getElementById("scrubHead");
+const trackEl = document.getElementById("scrubTrack");
 let marks = [];
 
+const maxScroll = () => Math.max(0, document.documentElement.scrollHeight - innerHeight);
+
+// Marks are stored as scroll positions: a section's timecode is hit when its top
+// reaches 40% down the viewport. The top of the page is always 00:00:00:00 and
+// the last section is pinned to the bottom, so the readout spans the whole page.
 function measure() {
-  marks = [{ y: 0, f: 0 }].concat(
-    [...document.querySelectorAll("[data-tc]")].map(el => ({
-      y: el.getBoundingClientRect().top + scrollY,
-      f: toFrames(el.dataset.tc)
-    }))
-  ).sort((a, b) => a.y - b.y);
+  const max = maxScroll();
+  const sections = [...document.querySelectorAll("[data-tc]")].map(el => ({
+    y: Math.min(Math.max(1, el.getBoundingClientRect().top + scrollY - innerHeight * 0.4), max),
+    f: toFrames(el.dataset.tc)
+  }));
+  if (sections.length) sections[sections.length - 1].y = max;
+  marks = [{ y: 0, f: 0 }].concat(sections).sort((a, b) => a.y - b.y);
 }
 
 function draw() {
-  const max = document.documentElement.scrollHeight - innerHeight;
-  const pct = (max > 0 ? Math.min(scrollY / max, 1) : 0) * 100 + "%";
-  fillEl.style.width = pct;
+  const max = maxScroll();
+  const p = max > 0 ? Math.min(scrollY / max, 1) : 0;
+  fillEl.style.width = headEl.style.left = p * 100 + "%";
+  trackEl.setAttribute("aria-valuenow", Math.round(p * 100));
 
-  const y = scrollY + innerHeight * 0.4;
+  const y = scrollY;
   let i = marks.findIndex(m => m.y > y);
   if (i === -1) i = marks.length;
   const a = marks[i - 1] || marks[0];
@@ -43,6 +52,35 @@ function draw() {
   const f = b ? a.f + (b.f - a.f) * ((y - a.y) / (b.y - a.y || 1)) : a.f;
   tcEl.textContent = toTC(Math.max(0, f));
 }
+
+// Drag (or click) anywhere on the track to jump the page there.
+// "instant" overrides the smooth scroll-behavior so the page keeps up with the pointer.
+const seek = p => scrollTo({ top: Math.min(Math.max(p, 0), 1) * maxScroll(), behavior: "instant" });
+const seekTo = e => {
+  const r = trackEl.getBoundingClientRect();
+  seek((e.clientX - r.left) / r.width);
+};
+
+trackEl.addEventListener("pointerdown", e => {
+  trackEl.setPointerCapture(e.pointerId);
+  trackEl.classList.add("dragging");
+  seekTo(e);
+});
+trackEl.addEventListener("pointermove", e => {
+  if (trackEl.hasPointerCapture(e.pointerId)) seekTo(e);
+});
+const endDrag = () => trackEl.classList.remove("dragging");
+trackEl.addEventListener("pointerup", endDrag);
+trackEl.addEventListener("pointercancel", endDrag);
+
+trackEl.addEventListener("keydown", e => {
+  const p = scrollY / (maxScroll() || 1);
+  const step = e.shiftKey ? 0.1 : 0.02;
+  const to = { ArrowRight: p + step, ArrowUp: p + step, ArrowLeft: p - step, ArrowDown: p - step, Home: 0, End: 1 }[e.key];
+  if (to === undefined) return;
+  e.preventDefault();
+  seek(to);
+});
 
 let queued = false;
 addEventListener("scroll", () => {
