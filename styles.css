@@ -23,6 +23,15 @@
 
   --sans: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
   --mono: "JetBrains Mono", ui-monospace, "SF Mono", Consolas, monospace;
+
+  /* Small text never goes below --fs-label (12px). */
+  --fs-label: .75rem;  /* slugs, captions, tags, timecodes */
+  --fs-meta: .8125rem; /* the running timecode readout */
+
+  /* Three letter-spacings, no one-offs. */
+  --track-head: -0.03em; /* big sans headings */
+  --track-mono: .04em;   /* mono in sentence case: timecodes, captions, clip names */
+  --track-caps: .14em;   /* mono in UPPERCASE: slugs, eyebrow, tags */
 }
 
 *,
@@ -53,7 +62,7 @@ body {
 h1,
 h2 {
   font-weight: 800;
-  letter-spacing: -0.03em;
+  letter-spacing: var(--track-head);
   line-height: 1.02;
   margin: 0;
 }
@@ -107,8 +116,8 @@ a {
   justify-content: space-between;
   gap: .75rem;
   padding: 0 1.25rem;
-  font: 500 .68rem/1 var(--mono);
-  letter-spacing: .06em;
+  font: 500 var(--fs-label)/1 var(--mono);
+  letter-spacing: var(--track-mono);
   border-top: 1px solid var(--line);
   background: rgba(7, 6, 11, .92);
   backdrop-filter: blur(8px);
@@ -116,7 +125,7 @@ a {
 
 .scrub-tc {
   color: var(--amber);
-  font-size: .78rem;
+  font-size: var(--fs-meta);
 }
 
 /* Drag it like a playhead. The visible line is 2px; the hit area is the full bar height. */
@@ -206,8 +215,8 @@ a {
   bottom: calc(100% + .4rem);
   left: clamp(4.5rem, var(--p, 0%), calc(100% - 4.5rem));
   padding: .4rem .6rem;
-  font: 500 .66rem/1 var(--mono);
-  letter-spacing: .08em;
+  font: 500 var(--fs-label)/1 var(--mono);
+  letter-spacing: var(--track-mono);
   white-space: nowrap;
   color: var(--text);
   background: var(--panel-2);
@@ -234,8 +243,8 @@ a {
 
 .scrub-label {
   color: var(--dim);
-  letter-spacing: .22em;
-  font-size: .6rem;
+  letter-spacing: var(--track-caps);
+  font-size: var(--fs-label);
 }
 
 body {
@@ -265,11 +274,29 @@ body {
 }
 
 .eyebrow {
-  font: 500 .72rem/1 var(--mono);
-  letter-spacing: .18em;
+  font: 500 var(--fs-label)/1 var(--mono);
+  letter-spacing: var(--track-caps);
   text-transform: uppercase;
   color: var(--dim);
   margin-bottom: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6em .9em;
+}
+
+/* Each phrase stays whole; on narrow screens they stack instead of breaking mid-phrase. */
+.eyebrow span {
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .eyebrow {
+    flex-direction: column;
+  }
+
+  .eyebrow .sep {
+    display: none;
+  }
 }
 
 .wordmark {
@@ -292,9 +319,9 @@ body {
 }
 
 .hero-note {
-  font: 400 .72rem/1 var(--mono);
+  font: 400 var(--fs-label)/1 var(--mono);
   color: var(--dim);
-  letter-spacing: .14em;
+  letter-spacing: var(--track-caps);
   text-transform: uppercase;
   margin: 1.75rem 0 0;
 }
@@ -334,7 +361,7 @@ body {
   align-items: center;
   gap: .55rem;
   padding: .6rem .85rem;
-  font: 400 .68rem/1 var(--mono);
+  font: 400 var(--fs-label)/1 var(--mono);
   color: var(--dim);
   background: var(--panel-2);
   border-bottom: 1px solid var(--line);
@@ -384,8 +411,8 @@ body {
   translate: 0 50%;
   text-align: center;
   color: var(--dim);
-  font: 400 .66rem/1 var(--mono);
-  letter-spacing: .2em;
+  font: 400 var(--fs-label)/1 var(--mono);
+  letter-spacing: var(--track-caps);
 }
 
 /* Captions sit on the frame, like a burnt-in slate. */
@@ -396,7 +423,7 @@ body {
   right: 0;
   bottom: 0;
   padding: 2.5rem .9rem .7rem;
-  font: 400 .7rem/1.4 var(--mono);
+  font: 400 var(--fs-label)/1.4 var(--mono);
   color: var(--text-2);
   background: linear-gradient(transparent, rgba(7, 6, 11, .88));
 }
@@ -466,8 +493,8 @@ body {
 }
 
 .slug {
-  font: 500 .68rem/1 var(--mono);
-  letter-spacing: .18em;
+  font: 500 var(--fs-label)/1 var(--mono);
+  letter-spacing: var(--track-caps);
   text-transform: uppercase;
   color: var(--dim);
   margin-bottom: 1.1rem;
@@ -569,9 +596,42 @@ body {
   margin-left: clamp(0rem, 9vw, 7rem);
 }
 
-/* 04: grade comparison */
+/* Page rhythm, so no two neighbours share a layout:
+   01 text | media     02 full-bleed frame, panel overlaps     03 indented, small still
+   04 heading row over a wide frame     05 media | text     06 centred type, no media
+   07 text | diagram, bottom-aligned    08 full-width timeline, caption after it */
+
+/* 04: heading left, subtitle answers it on the right, frame spans below. */
+.grade {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  column-gap: clamp(2rem, 5vw, 4rem);
+  align-items: end;
+}
+
+.grade .clip-text {
+  display: contents;
+}
+
+.grade .slug {
+  grid-column: 1 / -1;
+}
+
+.grade h2 {
+  grid-column: 1;
+  margin-bottom: 0;
+  font-size: clamp(2.4rem, 1.4rem + 4vw, 5rem);
+}
+
+.grade .clip-text p:not(.slug) {
+  grid-column: 2;
+  margin: 0;
+  padding-bottom: .35em;
+}
+
 .grade .compare {
-  margin: 2.5rem 0 0;
+  grid-column: 1 / -1;
+  margin: clamp(2rem, 4vw, 3rem) 0 0;
 }
 
 /* Drag anywhere on the frame. pan-y keeps vertical page scrolling working on touch. */
@@ -658,8 +718,8 @@ body {
   z-index: 1;
   top: .75rem;
   padding: .3rem .5rem;
-  font: 500 .66rem/1 var(--mono);
-  letter-spacing: .1em;
+  font: 500 var(--fs-label)/1 var(--mono);
+  letter-spacing: var(--track-caps);
   text-transform: uppercase;
   color: var(--text);
   background: rgba(7, 6, 11, .7);
@@ -704,9 +764,9 @@ body {
 }
 
 .compare>figcaption {
-  font: 400 .7rem/1 var(--mono);
+  font: 400 var(--fs-label)/1 var(--mono);
   color: var(--dim);
-  letter-spacing: .1em;
+  letter-spacing: var(--track-mono);
   margin-top: .75rem;
 }
 
@@ -723,39 +783,44 @@ body {
 }
 
 /* 06: narrow, centred, no media at all */
+/* 06: the one centred section, and the one with no frame. The app names are the image. */
 .tools {
   max-width: 62rem;
+  text-align: center;
+  padding-block: clamp(6rem, 16vh, 11rem);
+}
+
+.tools .clip-text p:not(.slug) {
+  margin-inline: auto;
 }
 
 .apps {
   list-style: none;
-  display: grid;
-  gap: 1px;
-  margin: 2.5rem 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .35rem;
+  margin: clamp(2rem, 5vw, 3.5rem) 0 0;
   padding: 0;
-  background: var(--line);
-  border: 1px solid var(--line);
-  border-radius: 5px;
-  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
-  overflow: hidden;
 }
 
 .apps li {
-  background: var(--panel);
-  padding: 1.5rem;
-  font-weight: 600;
-  font-size: 1.1rem;
+  font-weight: 800;
+  font-size: clamp(1.5rem, .9rem + 3vw, 3rem);
+  letter-spacing: var(--track-head);
+  line-height: 1.1;
+  white-space: nowrap;
 }
 
-/* Software version pip, like a bin item */
+/* A colour-label pip before each name, like a bin item */
 .apps li::before {
   content: "";
   display: inline-block;
-  vertical-align: middle;
-  width: .55rem;
-  height: .55rem;
-  border-radius: 2px;
-  margin-right: .7rem;
+  vertical-align: .15em;
+  width: .32em;
+  height: .32em;
+  border-radius: .06em;
+  margin-right: .35em;
   background: var(--brand-grad);
 }
 
@@ -763,10 +828,22 @@ body {
   background: var(--amber);
 }
 
+/* 07: text beside the diagram, both sitting on the same baseline. */
+.multicam {
+  display: grid;
+  grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: end;
+}
+
+.multicam .clip-text p:not(.slug) {
+  margin-bottom: 0;
+}
+
 .sync {
   list-style: none;
   position: relative;
-  margin: 2.5rem 0 0;
+  margin: 0;
   padding: 1rem 0;
   background: var(--panel);
   border: 1px solid var(--line);
@@ -782,7 +859,7 @@ body {
 
 .sync b {
   flex: 0 0 3.5rem;
-  font: 500 .64rem/1 var(--mono);
+  font: 500 var(--fs-label)/1 var(--mono);
   color: var(--dim);
 }
 
@@ -795,8 +872,8 @@ body {
 .sync time {
   flex: 0 0 7.5rem;
   text-align: right;
-  font: 400 .62rem/1 var(--mono);
-  letter-spacing: .06em;
+  font: 400 var(--fs-label)/1 var(--mono);
+  letter-spacing: var(--track-mono);
   color: var(--dim);
 }
 
@@ -824,9 +901,34 @@ body {
   background: var(--amber);
 }
 
+/* 08: timeline first, then the text hangs under its right half like a caption. */
+.timeline-sec {
+  display: flex;
+  flex-direction: column;
+}
+
+.timeline-sec .nle {
+  order: 1;
+}
+
+.timeline-sec>.clip-text {
+  order: 2;
+  width: 100%;
+  margin-top: clamp(2rem, 4vw, 3rem);
+}
+
+/* Percent margins here are of the page column, so this lines up with the timeline's midpoint. */
+.timeline-sec>.clip-text>* {
+  margin-left: 50%;
+}
+
+.timeline-sec .clip-text p:not(.slug) {
+  margin-bottom: 0;
+}
+
 /* 08: the timeline, drawn in CSS */
 .nle {
-  margin: 2.75rem auto 0;
+  margin: 0 auto;
   max-width: var(--page);
   width: calc(100% - var(--pad) * 2);
   background: var(--panel);
@@ -861,7 +963,7 @@ body {
   flex: 0 0 3rem;
   display: grid;
   place-items: center;
-  font: 500 .64rem/1 var(--mono);
+  font: 500 var(--fs-label)/1 var(--mono);
   color: var(--dim);
   background: var(--panel-2);
   border-radius: 3px;
@@ -879,16 +981,17 @@ body {
   bottom: 0;
   left: calc(var(--x) * 1%);
   width: calc(var(--w) * 1% - 2px);
-  display: flex;
-  align-items: center;
+  display: block;
+  line-height: calc(1.9rem - 2px); /* lane height minus the top border, centres the label */
   padding-inline: .5rem;
-  font: 500 .6rem/1 var(--mono);
-  letter-spacing: .08em;
+  font: 500 var(--fs-label)/1 var(--mono);
+  letter-spacing: var(--track-mono);
   font-style: normal;
   color: rgba(255, 255, 255, .82);
   border-radius: 3px;
   overflow: hidden;
   white-space: nowrap;
+  text-overflow: ellipsis;
   border-top: 2px solid rgba(255, 255, 255, .16);
 }
 
@@ -977,9 +1080,9 @@ body {
 }
 
 .colophon {
-  font: 400 .68rem/1 var(--mono);
+  font: 400 var(--fs-label)/1 var(--mono);
   color: var(--dim);
-  letter-spacing: .12em;
+  letter-spacing: var(--track-mono);
   margin: 2.5rem 0 0;
 }
 
@@ -995,8 +1098,23 @@ body {
 
   .split,
   .split.flip,
-  .offset {
+  .offset,
+  .grade,
+  .multicam {
     grid-template-columns: 1fr;
+  }
+
+  .grade h2,
+  .grade .clip-text p:not(.slug) {
+    grid-column: 1;
+  }
+
+  .grade h2 {
+    margin-bottom: 1.1rem;
+  }
+
+  .timeline-sec>.clip-text>* {
+    margin-left: 0;
   }
 
   .offset {
@@ -1023,7 +1141,7 @@ body {
   /* Keep the source timecodes, they carry the point of the section. */
   .sync time {
     flex-basis: 4.75rem;
-    font-size: .55rem;
+    font-size: var(--fs-label);
   }
 
   .sync li {
