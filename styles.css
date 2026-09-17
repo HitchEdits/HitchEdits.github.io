@@ -804,7 +804,7 @@ body {
   padding: 0;
 }
 
-.apps li {
+.apps > li {
   font-weight: 800;
   font-size: clamp(1.5rem, .9rem + 3vw, 3rem);
   letter-spacing: var(--track-head);
@@ -813,7 +813,7 @@ body {
 }
 
 /* A colour-label pip before each name, like a bin item */
-.apps li::before {
+.apps > li::before {
   content: "";
   display: inline-block;
   vertical-align: .15em;
@@ -824,10 +824,26 @@ body {
   background: var(--brand-grad);
 }
 
-.apps li:last-child::before {
+.apps > li:last-child::before {
   background: var(--amber);
 }
 
+
+.apps ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: .9rem;
+  margin: .5rem 0 0; 
+  padding: 0;
+}
+
+.apps ul li {
+  font: 400 var(--fs-label)/1 var(--mono);
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--dim);
+}
 /* 07: text beside the diagram, both sitting on the same baseline. */
 .multicam {
   display: grid;
