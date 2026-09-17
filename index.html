@@ -35,8 +35,8 @@
   <!-- Scroll position, shown as a timecode. Filled by main.js -->
   <aside class="scrub">
     <span class="scrub-tc" id="tc" aria-hidden="true">00:00:00:00</span>
-    <span class="scrub-track" id="scrubTrack" role="slider" tabindex="0" aria-label="Page position"
-      aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+    <span class="scrub-track" id="scrubTrack" role="slider" tabindex="0" aria-label="Page position" aria-valuemin="0"
+      aria-valuemax="100" aria-valuenow="0">
       <span class="scrub-fill" id="scrubFill"></span>
       <span class="scrub-head" id="scrubHead"></span>
       <span class="scrub-tip" id="scrubTip" aria-hidden="true"></span>
@@ -45,7 +45,8 @@
   </aside>
 
   <header class="hero">
-    <p class="eyebrow"><span>Video editor</span><span class="sep" aria-hidden="true">·</span><span>Premiere Pro &amp; DaVinci Resolve</span></p>
+    <p class="eyebrow"><span>Video editor</span><span class="sep" aria-hidden="true">·</span><span>Premiere Pro &amp;
+        DaVinci Resolve</span></p>
     <h1 class="wordmark">Hitch<span>Edits</span></h1>
     <p class="hero-line">[One line about what you edit and who for.]</p>
 
@@ -168,12 +169,29 @@
         <p>capable, whether or not the footage is synchronized, or if it spans across
           multiple days.</p>
       </div>
-      <ol class="sync">
-         <li><b>CAM A</b><svg class="wave" viewBox="0 0 600 64" preserveAspectRatio="none"></svg><time>10:14:02:00</time></li>
-        <li><b>CAM B</b><svg class="wave" viewBox="0 0 600 64" preserveAspectRatio="none"></svg><time>00:00:00:00</time></li>
-        <li><b>CAM C</b><svg class="wave" viewBox="0 0 600 64" preserveAspectRatio="none"></svg><time>DAY 2</time></li>
-        <li><b>CAM D</b><svg class="wave" viewBox="0 0 600 64" preserveAspectRatio="none"></svg><time>DAY 3</time></li>
-      </ol>
+      <div class="mcam" role="group"
+        aria-label="A multicam sequence: four camera angles stacked as green clips, each showing its audio waveform, synced to a common point.">
+        <ol class="mcam-tracks">
+          <li><span class="mclip" style="--x:0;--w:94"><svg class="wave" data-bars="320" data-fill=".92"
+                viewBox="0 0 600 64" preserveAspectRatio="none"></svg><b>CAM A &middot; Angle 1
+                (master)</b><em>02:43:14</em></span></li>
+          <li><span class="mclip" style="--x:6;--w:34"><svg class="wave" data-bars="160" data-fill=".92"
+                viewBox="0 0 600 64" preserveAspectRatio="none"></svg><b>CAM B &middot; Angle
+                2</b><em>00:58:02</em></span><span class="mclip" style="--x:48;--w:46"><svg class="wave" data-bars="200"
+                data-fill=".92" viewBox="0 0 600 64" preserveAspectRatio="none"></svg><b>CAM B &middot; Angle
+                2</b><em>01:22:19</em></span></li>
+          <li><span class="mclip" style="--x:0;--w:52"><svg class="wave" data-bars="220" data-fill=".92"
+                viewBox="0 0 600 64" preserveAspectRatio="none"></svg><b>CAM C &middot; Angle
+                3</b><em>01:31:07</em></span><span class="mclip" style="--x:60;--w:34"><svg class="wave" data-bars="160"
+                data-fill=".92" viewBox="0 0 600 64" preserveAspectRatio="none"></svg><b>CAM C &middot; Angle
+                3</b><em>00:54:11</em></span></li>
+          <li><span class="mclip" style="--x:18;--w:64"><svg class="wave" data-bars="260" data-fill=".92"
+                viewBox="0 0 600 64" preserveAspectRatio="none"></svg><b>CAM D &middot; Angle
+                4</b><em>01:47:33</em></span></li>
+        </ol>
+        <span class="mcam-head" id="mcamHead" role="slider" tabindex="0" aria-label="Playhead" aria-valuemin="0"
+          aria-valuemax="100" aria-valuenow="38"></span>
+      </div>
     </section>
 
     <!-- 08 the timeline is drawn in CSS, no asset needed -->

@@ -856,65 +856,141 @@ body {
   margin-bottom: 0;
 }
 
-.sync {
-  list-style: none;
+.mcam {
+  --tl-bg: #21252C;
+  --tl-line: #2E343D;
+  --clip: #4E9B74;
+  --clip-2: #437F61;
+  --clip-wave: #D3ECDF;
+  --playhead: #D9453C;
+
   position: relative;
-  margin: 0;
-  padding: 1rem 0;
-  background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 6px;
+  padding: .55rem;
+  touch-action: pan-y;
+  border-radius: 5px;
+  background-color: var(--tl-bg);
+    background-image:
+    repeating-linear-gradient(90deg, var(--tl-line) 0 1px, transparent 1px 12.5%),
+    repeating-linear-gradient(180deg, var(--tl-line) 0 1px, transparent 1px calc(3.4rem + 3px));
+  border: 1px solid var(--tl-line);
+  overflow: hidden;
 }
 
-.sync li {
+.mcam-tracks {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: flex;
-  align-items: center;
-  gap: .9rem;
-  padding: .35rem 1.25rem;
+  flex-direction: column;
+  gap: 3px;
 }
 
-.sync b {
-  flex: 0 0 3.5rem;
-  font: 500 var(--fs-label)/1 var(--mono);
-  color: var(--dim);
+.mcam-tracks li {
+  position: relative;
+  height: 3.4rem;
 }
 
-.sync .wave {
-  flex: 1;
-  height: 1.6rem;
+.mclip {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--x) * 1%);
+  width: calc(var(--w) * 1%);
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: 1fr auto;
+  border-radius: 3px;
+  background: var(--clip);
+  overflow: hidden;
+}
+
+.mclip .wave {
+  grid-column: 1 / -1;
+  height: auto;
+  min-height: 0;
   margin: 0;
+  padding: .2rem .25rem 0;
 }
 
-.sync time {
-  flex: 0 0 7.5rem;
-  text-align: right;
-  font: 400 var(--fs-label)/1 var(--mono);
+.mcam .wave rect {
+  fill: var(--clip-wave);
+}
+
+
+.mclip b,
+.mclip em {
+  background: var(--clip-2);
+  font: 500 var(--fs-label)/1.6 var(--sans);
+  font-style: normal;
+  color: #F2FBF6;
+  padding: .2rem .45rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.mclip em {
+  font-family: var(--mono);
   letter-spacing: var(--track-mono);
-  color: var(--dim);
+  color: #D8EFE3;
 }
 
-/* Same audio, but each camera's mic sat a different distance away. */
-.sync li:nth-child(2) .wave {
-  scale: 1 .72;
+/* CAM C and D on the blue label. */
+.mcam-tracks li:nth-child(n+3) {
+  --clip: #2596BE;
+  --clip-2: #1E7B9B;
+  --clip-wave: #DCEFF7;
 }
 
-.sync li:nth-child(3) .wave {
-  scale: 1 .52;
+/* The multicam badge that sits before the clip name. */
+.mclip b::before {
+  content: "";
+  display: inline-block;
+  vertical-align: -1px;
+  width: .72em;
+  height: .72em;
+  margin-right: .4em;
+  opacity: .85;
+  background:
+    linear-gradient(currentColor 0 0) 0 0 / 44% 44%,
+    linear-gradient(currentColor 0 0) 100% 0 / 44% 44%,
+    linear-gradient(currentColor 0 0) 0 100% / 44% 44%,
+    linear-gradient(currentColor 0 0) 100% 100% / 44% 44%;
+  background-repeat: no-repeat;
 }
 
-.sync li:nth-child(4) .wave {
-  scale: 1 .86;
+/* Playhead. Draggable, with the triangle cap Premiere puts on top. */
+.mcam-head {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--p, 38%);
+  width: 2px;
+  background: var(--playhead);
+  z-index: 2;
+  cursor: ew-resize;
 }
 
-/* The point every angle is locked to. */
-.sync::after {
+/* Widens the grab area without widening the line. */
+.mcam-head::before {
   content: "";
   position: absolute;
-  top: .5rem;
-  bottom: .5rem;
-  left: 38%;
-  width: 2px;
-  background: var(--amber);
+  inset: 0 -8px;
+}
+
+.mcam-head::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  translate: -50% 0;
+  border-top: 7px solid var(--playhead);
+  border-inline: 5px solid transparent;
+}
+
+.mcam-head:focus-visible {
+  outline: 2px solid var(--brand-hi);
+  outline-offset: 2px;
 }
 
 /* 08: timeline first, then the text hangs under its right half like a caption. */

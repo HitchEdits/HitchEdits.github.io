@@ -185,13 +185,12 @@ document.querySelectorAll(".wave").forEach(wave => {
   // Deterministic pseudo-noise, looks like speech, same every load.
   let seed = 7;
   const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-  const bars = 120, gap = 600 / bars;
-
+  const bars = +wave.dataset.bars || 120, fill = +wave.dataset.fill || .55, gap = 600 / bars;
   wave.innerHTML = Array.from({ length: bars }, (_, i) => {
     const env = Math.sin((i / bars) * Math.PI * 3.2) * 0.35 + 0.5; // phrasing
     const h = Math.max(2, (rnd() * 0.55 + env * 0.7) * 58);
     return `<rect x="${(i * gap).toFixed(1)}" y="${((64 - h) / 2).toFixed(1)}"
-            width="${(gap * 0.55).toFixed(1)}" height="${h.toFixed(1)}"
+            width="${(gap * fill).toFixed(1)}" height="${h.toFixed(1)}"
             rx="1" opacity="${(0.35 + env * 0.5).toFixed(2)}"/>`;
   }).join("");
 });
@@ -279,3 +278,39 @@ document.getElementById("year").textContent = new Date().getFullYear();
 measure(); draw();
 if (document.fonts) document.fonts.ready.then(() => { measure(); draw(); });
 addEventListener("load", () => { measure(); draw(); });
+
+const mcam = document.querySelector(".mcam");
+if (mcam) {
+  const head = mcam.querySelector(".mcam-head");
+  const put = p => {
+    p = Math.min(Math.max(p, 0), 100);
+    mcam.style.setProperty("--p", p.toFixed(2) + "%");
+    head.setAttribute("aria-valuenow", Math.round(p));
+  };
+  const move = e => {
+    const r = mcam.getBoundingClientRect();
+    put(((e.clientX - r.left) / r.width) * 100);
+  };
+
+  let down = false;
+  mcam.addEventListener("pointerdown", e => {
+    if (e.button !== 0) return;
+    down = true;
+    try { mcam.setPointerCapture(e.pointerId); } catch { /* synthetic pointer */ }
+    e.preventDefault();
+    move(e);
+  });
+  mcam.addEventListener("pointermove", e => { if (down) move(e); });
+  const up = () => { down = false; };
+  mcam.addEventListener("pointerup", up);
+  mcam.addEventListener("pointercancel", up);
+
+  head.addEventListener("keydown", e => {
+    const at = parseFloat(mcam.style.getPropertyValue("--p")) || 38;
+    const step = e.shiftKey ? 10 : 2;
+    const to = { ArrowLeft: at - step, ArrowRight: at + step, Home: 0, End: 100 }[e.key];
+    if (to === undefined) return;
+    e.preventDefault();
+    put(to);
+  });
+}
