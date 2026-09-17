@@ -141,7 +141,11 @@ a {
   flex: 1;
   align-self: stretch;
   position: relative;
-  cursor: grab;
+  /* The playhead itself, drawn to match .scrub-head. Plain url first so every
+     browser gets something; the image-set lines only upgrade retina. */
+  cursor: url("images/playhead.png") 12 2, col-resize;
+  cursor: -webkit-image-set(url("images/playhead.png") 1x, url("images/playhead@2x.png") 2x) 12 2, col-resize;
+  cursor: image-set(url("images/playhead.png") 1x, url("images/playhead@2x.png") 2x) 12 2, col-resize;
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;
@@ -158,7 +162,9 @@ a {
 }
 
 .scrub-track.dragging {
-  cursor: grabbing;
+  cursor: url("images/playhead.png") 12 2, col-resize;
+  cursor: -webkit-image-set(url("images/playhead.png") 1x, url("images/playhead@2x.png") 2x) 12 2, col-resize;
+  cursor: image-set(url("images/playhead.png") 1x, url("images/playhead@2x.png") 2x) 12 2, col-resize;
 }
 
 .scrub-fill {
@@ -979,7 +985,9 @@ body {
   width: 2px;
   background: var(--playhead);
   z-index: 2;
-  cursor: ew-resize;
+  cursor: url("images/playhead.png") 12 2, col-resize;
+  cursor: -webkit-image-set(url("images/playhead.png") 1x, url("images/playhead@2x.png") 2x) 12 2, col-resize;
+  cursor: image-set(url("images/playhead.png") 1x, url("images/playhead@2x.png") 2x) 12 2, col-resize;
 }
 
 /* Widens the grab area without widening the line. */
