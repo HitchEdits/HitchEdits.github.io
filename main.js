@@ -183,7 +183,7 @@ addEventListener("resize", () => { measure(); draw(); });
 
 document.querySelectorAll(".wave").forEach(wave => {
   // Deterministic pseudo-noise, looks like speech, same every load.
-  let seed = 7;
+  let seed = +wave.dataset.seed || 7;
   const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
   const bars = +wave.dataset.bars || 120, fill = +wave.dataset.fill || .55, gap = 600 / bars;
   wave.innerHTML = Array.from({ length: bars }, (_, i) => {

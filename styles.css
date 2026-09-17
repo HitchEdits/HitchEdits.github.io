@@ -4,7 +4,8 @@
   --panel-2: #17141F;
   --line: #2A2438;
   --text: #EDEAF2;
-  --text-2: #CFC8DC; /* subtitles and body copy */
+  --text-2: #CFC8DC;
+  /* subtitles and body copy */
   --dim: #9990AC;
 
   /* Brand, sampled from images/logo.jpg: magenta top-left, violet bottom-right.
@@ -12,10 +13,12 @@
      button, links. Everything else stays neutral and nothing glows. */
   --brand-a: #C0309A;
   --brand-b: #7A3FC0;
-  --brand-hi: #D48BE6; /* light tint for text and thin lines on the dark ground */
+  --brand-hi: #D48BE6;
+  /* light tint for text and thin lines on the dark ground */
   --brand-grad: linear-gradient(135deg, var(--brand-a), var(--brand-b));
 
-  --amber: #F0A93B;  /* render bar */
+  --amber: #F0A93B;
+  /* render bar */
   --green: #45C97F;
 
   --page: 1180px;
@@ -25,13 +28,18 @@
   --mono: "JetBrains Mono", ui-monospace, "SF Mono", Consolas, monospace;
 
   /* Small text never goes below --fs-label (12px). */
-  --fs-label: .75rem;  /* slugs, captions, tags, timecodes */
-  --fs-meta: .8125rem; /* the running timecode readout */
+  --fs-label: .75rem;
+  /* slugs, captions, tags, timecodes */
+  --fs-meta: .8125rem;
+  /* the running timecode readout */
 
   /* Three letter-spacings, no one-offs. */
-  --track-head: -0.03em; /* big sans headings */
-  --track-mono: .04em;   /* mono in sentence case: timecodes, captions, clip names */
-  --track-caps: .14em;   /* mono in UPPERCASE: slugs, eyebrow, tags */
+  --track-head: -0.03em;
+  /* big sans headings */
+  --track-mono: .04em;
+  /* mono in sentence case: timecodes, captions, clip names */
+  --track-caps: .14em;
+  /* mono in UPPERCASE: slugs, eyebrow, tags */
 }
 
 *,
@@ -235,6 +243,7 @@ a {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .scrub-tip,
   .scrub-head {
     transition: none;
@@ -742,6 +751,7 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
+
   .compare-handle::before,
   .compare-tag {
     transition: none;
@@ -804,7 +814,7 @@ body {
   padding: 0;
 }
 
-.apps > li {
+.apps>li {
   font-weight: 800;
   font-size: clamp(1.2rem, .7rem + 2vw, 2.25rem);
   letter-spacing: var(--track-head);
@@ -812,7 +822,7 @@ body {
 }
 
 /* A colour-label pip before each name, like a bin item */
-.apps > li::before {
+.apps>li::before {
   content: "";
   display: inline-block;
   vertical-align: .15em;
@@ -823,7 +833,7 @@ body {
   background: var(--brand-grad);
 }
 
-.apps > li:last-child::before {
+.apps>li:last-child::before {
   background: var(--amber);
 }
 
@@ -834,7 +844,7 @@ body {
   flex-wrap: wrap;
   justify-content: center;
   gap: .35rem .9rem;
-  margin: .65rem 0 0; 
+  margin: .65rem 0 0;
   padding: 0;
 }
 
@@ -844,6 +854,7 @@ body {
   text-transform: uppercase;
   color: var(--dim);
 }
+
 /* 07: text beside the diagram, both sitting on the same baseline. */
 .multicam {
   display: grid;
@@ -869,7 +880,7 @@ body {
   touch-action: pan-y;
   border-radius: 5px;
   background-color: var(--tl-bg);
-    background-image:
+  background-image:
     repeating-linear-gradient(90deg, var(--tl-line) 0 1px, transparent 1px 12.5%),
     repeating-linear-gradient(180deg, var(--tl-line) 0 1px, transparent 1px calc(3.4rem + 3px));
   border: 1px solid var(--tl-line);
@@ -1069,12 +1080,15 @@ body {
 
 .c {
   position: absolute;
+  z-index: 0;
+  top: 0;
   top: 0;
   bottom: 0;
   left: calc(var(--x) * 1%);
   width: calc(var(--w) * 1% - 2px);
   display: block;
-  line-height: calc(1.9rem - 2px); /* lane height minus the top border, centres the label */
+  line-height: calc(1.9rem - 2px);
+  /* lane height minus the top border, centres the label */
   padding-inline: .5rem;
   font: 500 var(--fs-label)/1 var(--mono);
   letter-spacing: var(--track-mono);
@@ -1109,6 +1123,26 @@ body {
 
 .c.mus {
   background: #4A2440;
+}
+
+/* Audio clips carry their waveform behind the label. */
+.c .wave {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: .55;
+  pointer-events: none;
+}
+
+.c.aud .wave rect {
+  fill: #8FE8BC;
+}
+
+.c.mus .wave rect {
+  fill: #E79AD0;
 }
 
 
