@@ -636,12 +636,18 @@ body {
   padding-inline: var(--pad);
 }
 
+/* Both timelines are cropped to exactly 4614x629, aligned on the V1/A1 track
+   boundary, so matching the frame to that ratio means object-fit: contain
+   lands them pixel on pixel: no letterboxing, no drift between the two. */
 .stage-frame {
   position: relative;
   width: 100%;
-  aspect-ratio: 5.4;  /* between the two source ratios, 4.47 and 6.44 */
+  aspect-ratio: 4614 / 629;
   background: var(--panel);
-  border: 1px solid var(--line);
+  /* An inset outline, not a border: on a strip this wide a 1px border costs
+     2px of height, which contain repays as ~16px of letterboxing either side. */
+  outline: 1px solid var(--line);
+  outline-offset: -1px;
   border-radius: 6px;
   overflow: hidden;
 }
@@ -695,7 +701,7 @@ body {
   border-image: linear-gradient(var(--brand-a), var(--brand-b)) 1;
 }
 
-/* A 5.4:1 strip is only ~60px tall on a phone, which makes the timeline
+/* A 7.3:1 strip is only ~45px tall on a phone, which makes the timeline
    unreadable. Go taller and crop from the left instead of shrinking: you
    lose the tail of the sequence but you can actually see the cuts. */
 @media (max-width: 760px) {
