@@ -86,6 +86,10 @@ function draw() {
   tcEl.textContent = toTC(Math.max(0, f));
 }
 
+/* Pointer capture hands the cursor to the capturing element, so a playhead's
+   custom cursor vanishes the moment a drag starts. Hold it on <html> instead. */
+const scrubCursor = on => document.documentElement.classList.toggle("scrubbing", on);
+
 /* Drag (or click) the track to scrub. The playhead snaps to the pointer and the
    page eases after it every frame, so the timecode rolls instead of jumping. */
 
@@ -142,6 +146,7 @@ trackEl.addEventListener("pointerdown", e => {
   e.preventDefault(); // no text selection or native drag, which would cancel the pointer
   try { trackEl.setPointerCapture(e.pointerId); } catch { /* synthetic pointer */ }
   trackEl.classList.add("dragging");
+  scrubCursor(true);
   dragging = true;
   seekTo(e);
 });
@@ -151,6 +156,7 @@ trackEl.addEventListener("pointermove", e => {
 const endDrag = () => {
   dragging = false;
   trackEl.classList.remove("dragging");
+  scrubCursor(false);
   if (!easing) target = null;
 };
 trackEl.addEventListener("pointerup", endDrag);
@@ -297,13 +303,15 @@ if (mcam) {
     if (e.button !== 0) return;
     down = true;
     try { mcam.setPointerCapture(e.pointerId); } catch { /* synthetic pointer */ }
+    scrubCursor(true);
     e.preventDefault();
     move(e);
   });
   mcam.addEventListener("pointermove", e => { if (down) move(e); });
-  const up = () => { down = false; };
+  const up = () => { down = false; scrubCursor(false); };
   mcam.addEventListener("pointerup", up);
   mcam.addEventListener("pointercancel", up);
+  mcam.addEventListener("lostpointercapture", up);
 
   head.addEventListener("keydown", e => {
     const at = parseFloat(mcam.style.getPropertyValue("--p")) || 38;

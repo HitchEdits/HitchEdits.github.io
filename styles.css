@@ -136,6 +136,17 @@ a {
   font-size: var(--fs-meta);
 }
 
+/* While a playhead is being dragged the pointer is captured, so the cursor comes
+   from the capturing element (or from whatever the pointer strays over) and the
+   custom one is lost mid-drag. Pinning it to the document keeps it for the whole
+   gesture. Set by main.js on pointerdown, cleared on pointerup. */
+html.scrubbing,
+html.scrubbing * {
+  cursor: url("images/playhead.png") 12 2, col-resize !important;
+  cursor: -webkit-image-set(url("images/playhead.png") 1x, url("images/playhead@2x.png") 2x) 12 2, col-resize !important;
+  cursor: image-set(url("images/playhead.png") 1x, url("images/playhead@2x.png") 2x) 12 2, col-resize !important;
+}
+
 /* Drag it like a playhead. The visible line is 2px; the hit area is the full bar height. */
 .scrub-track {
   flex: 1;
