@@ -632,17 +632,16 @@ body {
   grid-template-columns: min(100%, calc(var(--page) + 8rem));
   justify-content: center;
   align-content: center;
-  gap: 2rem;
   padding-inline: var(--pad);
 }
 
-/* Both timelines are cropped to exactly 2152x278, aligned on the V1/A1 track
+/* Both timelines are cropped to exactly 1990x271, aligned on the V1/A1 track
    boundary, so matching the frame to that ratio means object-fit: contain
    lands them pixel on pixel: no letterboxing, no drift between the two. */
 .stage-frame {
   position: relative;
   width: 100%;
-  aspect-ratio: 2152 / 278;
+  aspect-ratio: 1990 / 271;
   background: var(--panel);
   /* An inset outline, not a border: on a strip this wide a 1px border costs
      2px of height, which contain repays as ~16px of letterboxing either side. */
@@ -693,7 +692,7 @@ body {
   position: relative;
   z-index: 2;
   width: min(34rem, 100%);
-  margin: 0;
+  margin: 1.7rem 0 0;
   padding: 1.5rem 1.75rem;
   background: rgba(7, 6, 11, .85);
   backdrop-filter: blur(10px);
@@ -701,7 +700,7 @@ body {
   border-image: linear-gradient(var(--brand-a), var(--brand-b)) 1;
 }
 
-/* A 7.7:1 strip is only ~43px tall on a phone, which makes the timeline
+/* A 7.3:1 strip is only ~46px tall on a phone, which makes the timeline
    unreadable. Go taller and crop from the left instead of shrinking: you
    lose the tail of the sequence but you can actually see the cuts. */
 @media (max-width: 760px) {
@@ -713,6 +712,16 @@ body {
     object-fit: cover;
     object-position: left center;
   }
+}
+
+/* Photo credit, tucked right under the frame the way a caption sits under a
+   printed photo. It reads before the slug, so it stays quiet: label size,
+   dimmed, and never wider than the frame. */
+.stage-note {
+  margin: .7rem 0 0;
+  font: 400 var(--fs-label)/1.5 var(--mono);
+  color: var(--dim);
+  opacity: .72;
 }
 
 /* No pin, no wipe: just show the result. */
