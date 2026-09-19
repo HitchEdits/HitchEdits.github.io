@@ -635,13 +635,14 @@ body {
   padding-inline: var(--pad);
 }
 
-/* Both timelines are cropped to exactly 1990x271, aligned on the V1/A1 track
-   boundary, so matching the frame to that ratio means object-fit: contain
-   lands them pixel on pixel: no letterboxing, no drift between the two. */
+/* Both shots go in uncropped, so the frame takes the taller one's ratio and
+   they hang from the top edge. Both have their ruler on rows 18-19 and the
+   same 11px track pitch, so top-aligning puts the grids in register without
+   cutting anything; the shorter shot just stops 29px above the bottom. */
 .stage-frame {
   position: relative;
   width: 100%;
-  aspect-ratio: 1990 / 271;
+  aspect-ratio: 2000 / 329;
   background: var(--panel);
   /* An inset outline, not a border: on a strip this wide a 1px border costs
      2px of height, which contain repays as ~16px of letterboxing either side. */
@@ -656,7 +657,11 @@ body {
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;  /* never crop a timeline */
+  object-fit: contain;       /* never crop a timeline */
+  object-position: top;
+  /* The shorter shot would otherwise let the one underneath show through
+     along the bottom; its own empty-track grey carries on instead. */
+  background: #1f1f1f;
 }
 
 /* --e is the eased progress main.js writes on the section, 0 → 1. The messy
@@ -698,20 +703,6 @@ body {
   backdrop-filter: blur(10px);
   border-left: 2px solid;
   border-image: linear-gradient(var(--brand-a), var(--brand-b)) 1;
-}
-
-/* A 7.3:1 strip is only ~46px tall on a phone, which makes the timeline
-   unreadable. Go taller and crop from the left instead of shrinking: you
-   lose the tail of the sequence but you can actually see the cuts. */
-@media (max-width: 760px) {
-  .stage-frame {
-    aspect-ratio: 2.4;
-  }
-
-  .stage-img {
-    object-fit: cover;
-    object-position: left center;
-  }
 }
 
 /* Photo credit, tucked right under the frame the way a caption sits under a
