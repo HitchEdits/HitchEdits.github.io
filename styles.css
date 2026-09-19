@@ -64,7 +64,7 @@ body {
   color: var(--text);
   font: 400 clamp(1rem, 0.95rem + 0.2vw, 1.075rem)/1.65 var(--sans);
   -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 h1,
@@ -608,6 +608,123 @@ body {
   text-align: right;
   padding: .7rem .95rem 2.5rem;
   background: linear-gradient(rgba(7, 6, 11, .9), transparent);
+}
+
+/* ── 02 Pinned stage ────────────────────────────────────────── */
+
+/* The section is the scroll runway; --run is what the transition costs in
+   scrolling. The pin inside it is all the viewer ever sees. svh keeps the
+   pin from jolting when a mobile URL bar shows or hides. */
+.stage {
+  --run: 160vh;
+  height: calc(100svh + var(--run));
+  padding-block: 0;
+}
+
+/* An explicit column track, not a content-sized one: with justify-content
+   centring an auto track, the frame's width:100% would resolve against its
+   own content and collapse. */
+.stage-pin {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: grid;
+  grid-template-columns: min(100%, calc(var(--page) + 8rem));
+  justify-content: center;
+  align-content: center;
+  gap: 2rem;
+  padding-inline: var(--pad);
+}
+
+.stage-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 5.4;  /* between the two source ratios, 4.47 and 6.44 */
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.stage-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;  /* never crop a timeline */
+}
+
+/* --e is the eased progress main.js writes on the section, 0 → 1. The messy
+   cut is clipped away from the left, so the clean one sweeps in behind it,
+   going soft and flat on the way out like a discarded take. */
+.stage-img.messy {
+  clip-path: inset(0 0 0 calc(var(--e, 0) * 100%));
+  filter: blur(calc(var(--e, 0) * 5px)) saturate(calc(1 - var(--e, 0) * .5));
+  scale: calc(1 + var(--e, 0) * .02);
+  will-change: clip-path, filter;
+}
+
+/* The cut itself: a brand-coloured edge riding the wipe, faded in at the
+   start and out at the end so it never sits parked at either border. */
+.stage-frame::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: calc(var(--e, 0) * 100%);
+  width: 2px;
+  translate: -1px 0;
+  background: linear-gradient(var(--brand-a), var(--brand-b));
+  box-shadow: 0 0 18px 2px rgba(192, 48, 154, .55);
+  opacity: var(--edge, 0);
+  pointer-events: none;
+}
+
+/* Restores the panel look: .clip-text.over is no longer a direct child of
+   .bleed, so the .bleed > .clip-text.over rule stopped matching it. */
+.stage .clip-text.over {
+  justify-self: start;
+  position: relative;
+  z-index: 2;
+  width: min(34rem, 100%);
+  margin: 0;
+  padding: 1.5rem 1.75rem;
+  background: rgba(7, 6, 11, .85);
+  backdrop-filter: blur(10px);
+  border-left: 2px solid;
+  border-image: linear-gradient(var(--brand-a), var(--brand-b)) 1;
+}
+
+/* A 5.4:1 strip is only ~60px tall on a phone, which makes the timeline
+   unreadable. Go taller and crop from the left instead of shrinking: you
+   lose the tail of the sequence but you can actually see the cuts. */
+@media (max-width: 760px) {
+  .stage-frame {
+    aspect-ratio: 2.4;
+  }
+
+  .stage-img {
+    object-fit: cover;
+    object-position: left center;
+  }
+}
+
+/* No pin, no wipe: just show the result. */
+@media (prefers-reduced-motion: reduce) {
+  .stage {
+    height: auto;
+  }
+
+  .stage-pin {
+    position: static;
+    height: auto;
+    padding-block: clamp(4.5rem, 11vh, 8rem);
+  }
+
+  .stage-img.messy,
+  .stage-frame::after {
+    display: none;
+  }
 }
 
 /* 03: pushed off-centre on purpose */

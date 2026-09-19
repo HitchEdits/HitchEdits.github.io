@@ -185,6 +185,46 @@ addEventListener("scroll", () => {
 }, { passive: true });
 addEventListener("resize", () => { measure(); draw(); });
 
+/* ── 02 Pinned stage: scroll position drives the wipe ───────── */
+
+/* The section is a tall runway with a sticky pin inside it, so scrolling
+   past it reads as the messy cut being cleaned up in place rather than the
+   page moving on. CSS does the drawing; this only measures. */
+const stage = document.querySelector(".stage");
+if (stage && !reduceMotion.matches) {
+  const clamp01 = n => Math.min(Math.max(n, 0), 1);
+
+  let queuedStage = false;
+  const drawStage = () => {
+    queuedStage = false;
+    const run = stage.offsetHeight - innerHeight;
+    if (run <= 0) return;                      // pin taller than the viewport
+
+    const raw = clamp01(-stage.getBoundingClientRect().top / run);
+
+    // Spend the first and last 15% of the runway holding still, so the frame
+    // settles before the wipe starts and after it lands.
+    const t = clamp01((raw - .15) / .7);
+
+    // Smoothstep: eases both ends, so nothing starts or stops abruptly.
+    stage.style.setProperty("--e", (t * t * (3 - 2 * t)).toFixed(4));
+
+    // The cut edge fades in over the first sliver of the wipe and back out
+    // over the last, so it never sits parked against either border.
+    stage.style.setProperty("--edge", Math.min(t / .08, (1 - t) / .08, 1).toFixed(3));
+  };
+
+  // Same rAF throttle as the scrubber: one layout read per frame, not per event.
+  const queueStage = () => {
+    if (queuedStage) return;
+    queuedStage = true;
+    requestAnimationFrame(drawStage);
+  };
+  addEventListener("scroll", queueStage, { passive: true });
+  addEventListener("resize", queueStage);
+  drawStage();
+}
+
 /* ── Dialogue waveform ─────────────────────────────────────── */
 
 document.querySelectorAll(".wave").forEach(wave => {
