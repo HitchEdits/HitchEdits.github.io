@@ -45,6 +45,9 @@
   </aside>
 
   <header class="hero">
+    <nav class="hero-nav" aria-label="Contact">
+      <a class="hero-contact" href="#contact">Contact <span aria-hidden="true">&nearr;</span></a>
+    </nav>
     <p class="eyebrow"><span>Video editor</span><span class="sep" aria-hidden="true">·</span><span>Premiere Pro &amp;
         DaVinci Resolve</span></p>
     <h1 class="wordmark">Hitch<span>Edits</span></h1>
@@ -84,8 +87,10 @@
           <img class="stage-img messy" src="images/messytimeline1.webp" alt="A messy, disorganised timeline"
             decoding="async">
         </div>
-        <p class="stage-note">Real Premiere Pro sequences from past edits
-        </p>
+        <div class="stage-meta">
+          <p class="stage-note">Real Premiere Pro sequences from past edits</p>
+          <button type="button" class="timeline-expand" id="timelineExpand" aria-haspopup="dialog">View full timeline <span aria-hidden="true">&nearr;</span></button>
+        </div>
         <div class="clip-text over">
           <p class="slug"><b>V1</b> Clip 02</p>
           <h2>Clean Editing</h2>
@@ -93,6 +98,21 @@
         </div>
       </div>
     </section>
+
+
+    <dialog class="timeline-dialog" id="timelineDialog" aria-labelledby="timelineDialogTitle">
+      <div class="timeline-dialog-top">
+        <h2 id="timelineDialogTitle">Premiere Pro timeline</h2>
+        <button type="button" class="timeline-close" id="timelineClose" aria-label="Close full timeline" autofocus>&times;</button>
+      </div>
+      <div class="timeline-versions" role="group" aria-label="Timeline version">
+        <button type="button" data-timeline-view="messy" aria-pressed="false">Original</button>
+        <button type="button" data-timeline-view="clean" aria-pressed="true">Organised</button>
+      </div>
+      <div class="timeline-detail" tabindex="0" role="region" aria-label="Full-size timeline, scroll horizontally to inspect">
+        <img id="timelineDetailImage" src="images/cleantimeline.webp" alt="Organised Premiere Pro timeline at full size" width="2000" height="329">
+      </div>
+    </dialog>
 
     <!-- 03 deliberately off the grid, small square still -->
     <section class="clip offset" id="adaptable" data-tc="00:01:51:02">
@@ -134,17 +154,13 @@
 
     <section class="clip split flip audio-section" id="audio" data-tc="00:03:12:07">
       <figure class="audio-player" id="audioPlayer" aria-label="Original and fixed audio comparison">
-        <div class="audio-player-top">
-          <span>Before / After</span>
-          <span>WAV <span aria-hidden="true">·</span> 0:31</span>
-        </div>
         <div class="audio-interface" hidden>
           <div class="audio-versions" role="group" aria-label="Audio version">
             <button type="button" data-audio-version="original" aria-pressed="true">
-              <span>Original</span><small>Before editing</small>
+              <span>Original</span>
             </button>
             <button type="button" data-audio-version="fixed" aria-pressed="false">
-              <span>Fixed</span><small>After editing</small>
+              <span>Fixed</span>
             </button>
           </div>
           <div class="audio-waveform">
@@ -216,8 +232,8 @@
         <p>capable, whether or not the footage is synchronized, or if it spans across
           multiple days.</p>
       </div>
-      <div class="mcam" role="group"
-        aria-label="A multicam sequence: four camera angles stacked as green clips, each showing its audio waveform, synced to a common point.">
+      <div class="mcam" role="img"
+        aria-label="Four camera angles arranged as clips on a multicam timeline, aligned to a fixed red playhead.">
         <ol class="mcam-tracks">
           <li><span class="mclip" style="--x:0;--w:94"><svg class="wave" data-bars="320" data-fill=".92"
                 viewBox="0 0 600 64" preserveAspectRatio="none"></svg><b>CAM A &middot; Angle 1
@@ -236,8 +252,7 @@
                 viewBox="0 0 600 64" preserveAspectRatio="none"></svg><b>CAM D &middot; Angle
                 4</b><em>01:47:33</em></span></li>
         </ol>
-        <span class="mcam-head" id="mcamHead" role="slider" tabindex="0" aria-label="Playhead" aria-valuemin="0"
-          aria-valuemax="100" aria-valuenow="38"></span>
+        <span class="mcam-head" aria-hidden="true"></span>
       </div>
     </section>
 

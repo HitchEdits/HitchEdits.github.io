@@ -191,13 +191,19 @@ addEventListener("resize", () => { measure(); draw(); });
    past it reads as the messy cut being cleaned up in place rather than the
    page moving on. CSS does the drawing; this only measures. */
 const stage = document.querySelector(".stage");
-if (stage && !reduceMotion.matches) {
+if (stage) {
+  const stageMotion = matchMedia("(min-width: 761px) and (prefers-reduced-motion: no-preference)");
   const clamp01 = n => Math.min(Math.max(n, 0), 1);
 
   let queuedStage = false;
   const drawStage = () => {
     queuedStage = false;
-    const run = stage.offsetHeight - innerHeight;
+    if (!stageMotion.matches) {
+      stage.style.setProperty("--e", "1");
+      stage.style.setProperty("--edge", "0");
+      return;
+    }
+    const run = stage.offsetHeight - stage.querySelector(".stage-pin").offsetHeight;
     if (run <= 0) return;                      // pin taller than the viewport
 
     const raw = clamp01(-stage.getBoundingClientRect().top / run);
@@ -222,6 +228,7 @@ if (stage && !reduceMotion.matches) {
   };
   addEventListener("scroll", queueStage, { passive: true });
   addEventListener("resize", queueStage);
+  stageMotion.addEventListener("change", queueStage);
   drawStage();
 }
 
@@ -484,40 +491,36 @@ measure(); draw();
 if (document.fonts) document.fonts.ready.then(() => { measure(); draw(); });
 addEventListener("load", () => { measure(); draw(); });
 
-const mcam = document.querySelector(".mcam");
-if (mcam) {
-  const head = mcam.querySelector(".mcam-head");
-  const put = p => {
-    p = Math.min(Math.max(p, 0), 100);
-    mcam.style.setProperty("--p", p.toFixed(2) + "%");
-    head.setAttribute("aria-valuenow", Math.round(p));
+// Inspect either timeline at its original width without leaving the portfolio.
+const timelineDialog = document.getElementById("timelineDialog");
+const timelineExpand = document.getElementById("timelineExpand");
+if (timelineDialog && timelineExpand) {
+  const detailImage = document.getElementById("timelineDetailImage");
+  const views = {
+    messy: { src: "images/messytimeline1.webp", alt: "Original Premiere Pro timeline at full size" },
+    clean: { src: "images/cleantimeline.webp", alt: "Organised Premiere Pro timeline at full size" }
   };
-  const move = e => {
-    const r = mcam.getBoundingClientRect();
-    put(((e.clientX - r.left) / r.width) * 100);
-  };
-
-  let down = false;
-  mcam.addEventListener("pointerdown", e => {
-    if (e.button !== 0) return;
-    down = true;
-    try { mcam.setPointerCapture(e.pointerId); } catch { /* synthetic pointer */ }
-    scrubCursor(true);
-    e.preventDefault();
-    move(e);
+  const viewButtons = [...timelineDialog.querySelectorAll("[data-timeline-view]")];
+  timelineExpand.addEventListener("click", () => {
+    timelineDialog.showModal();
+    document.documentElement.classList.add("timeline-open");
   });
-  mcam.addEventListener("pointermove", e => { if (down) move(e); });
-  const up = () => { down = false; scrubCursor(false); };
-  mcam.addEventListener("pointerup", up);
-  mcam.addEventListener("pointercancel", up);
-  mcam.addEventListener("lostpointercapture", up);
-
-  head.addEventListener("keydown", e => {
-    const at = parseFloat(mcam.style.getPropertyValue("--p")) || 38;
-    const step = e.shiftKey ? 10 : 2;
-    const to = { ArrowLeft: at - step, ArrowRight: at + step, Home: 0, End: 100 }[e.key];
-    if (to === undefined) return;
-    e.preventDefault();
-    put(to);
+  document.getElementById("timelineClose").addEventListener("click", () => timelineDialog.close());
+  timelineDialog.addEventListener("close", () => {
+    document.documentElement.classList.remove("timeline-open");
+    timelineExpand.focus({ preventScroll: true });
   });
+  timelineDialog.addEventListener("click", event => {
+    if (event.target !== timelineDialog) return;
+    const box = timelineDialog.getBoundingClientRect();
+    if (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) {
+      timelineDialog.close();
+    }
+  });
+  viewButtons.forEach(button => button.addEventListener("click", () => {
+    const view = views[button.dataset.timelineView];
+    detailImage.src = view.src;
+    detailImage.alt = view.alt;
+    viewButtons.forEach(item => item.setAttribute("aria-pressed", String(item === button)));
+  }));
 }

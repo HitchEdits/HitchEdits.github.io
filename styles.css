@@ -614,7 +614,7 @@ body {
    scrolling. The pin inside it is all the viewer ever sees. svh keeps the
    pin from jolting when a mobile URL bar shows or hides. */
 .stage {
-  --run: 160vh;
+  --run: 40svh;
   height: calc(100svh + var(--run));
   padding-block: 0;
 }
@@ -943,16 +943,6 @@ body {
   display: none;
 }
 
-.audio-player-top {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  color: var(--dim);
-  font: 400 var(--fs-label)/1.4 var(--mono);
-  letter-spacing: var(--track-mono);
-}
-
 .audio-versions {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -970,13 +960,6 @@ body {
   cursor: pointer;
 }
 
-.audio-versions button small {
-  display: block;
-  margin-top: .2rem;
-  font: 400 var(--fs-label)/1.4 var(--mono);
-  color: var(--dim);
-}
-
 .audio-versions button:hover {
   border-color: var(--dim);
 }
@@ -985,10 +968,6 @@ body {
   background: var(--panel-2);
   border-color: var(--brand-hi);
   color: var(--text);
-}
-
-.audio-versions button[aria-pressed="true"] small {
-  color: var(--brand-hi);
 }
 
 .audio-waveform {
@@ -1294,25 +1273,16 @@ body {
   background-repeat: no-repeat;
 }
 
-/* Playhead. Draggable, with the triangle cap Premiere puts on top. */
+/* Fixed playhead with a Premiere-style triangle cap. */
 .mcam-head {
   position: absolute;
   top: 0;
   bottom: 0;
-  left: var(--p, 38%);
-  width: 2px;
+  left: 10%;
+  width: 1px;
   background: var(--playhead);
   z-index: 2;
-  cursor: url("images/playhead.png") 12 2, col-resize;
-  cursor: -webkit-image-set(url("images/playhead.png") 1x, url("images/playhead@2x.png") 2x) 12 2, col-resize;
-  cursor: image-set(url("images/playhead.png") 1x, url("images/playhead@2x.png") 2x) 12 2, col-resize;
-}
-
-/* Widens the grab area without widening the line. */
-.mcam-head::before {
-  content: "";
-  position: absolute;
-  inset: 0 -8px;
+  pointer-events: none;
 }
 
 .mcam-head::after {
@@ -1323,11 +1293,6 @@ body {
   translate: -50% 0;
   border-top: 7px solid var(--playhead);
   border-inline: 5px solid transparent;
-}
-
-.mcam-head:focus-visible {
-  outline: 2px solid var(--brand-hi);
-  outline-offset: 2px;
 }
 
 /* 08: timeline first, then the text hangs under its right half like a caption. */
@@ -1631,5 +1596,162 @@ body {
   .audio-waveform input,
   .compare-frame {
     cursor: var(--cursor-arrow);
+  }
+}
+
+.hero {
+  padding-top: clamp(1.25rem, 4vh, 3rem);
+}
+
+.hero-nav {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 2rem;
+}
+
+.hero-contact,
+.timeline-expand,
+.timeline-close,
+.timeline-versions button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .6rem;
+  min-height: 2.75rem;
+  padding: .55rem .9rem;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--panel);
+  color: var(--text);
+  font: 500 .875rem/1.4 var(--sans);
+  text-decoration: none;
+}
+
+.hero-contact:hover,
+.timeline-expand:hover,
+.timeline-close:hover,
+.timeline-versions button:hover {
+  border-color: var(--brand-hi);
+}
+
+.stage-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: .75rem;
+}
+
+.stage-meta .stage-note {
+  margin: 0;
+  opacity: 1;
+}
+
+.timeline-expand {
+  flex: 0 0 auto;
+}
+
+html.timeline-open {
+  overflow: hidden;
+}
+
+.timeline-dialog {
+  width: min(94vw, 1300px);
+  max-width: none;
+  max-height: 90dvh;
+  padding: clamp(1rem, 3vw, 1.75rem);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel);
+  color: var(--text);
+}
+
+.timeline-dialog::backdrop {
+  background: rgba(7, 6, 11, .88);
+}
+
+.timeline-dialog-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.timeline-dialog h2 {
+  font-size: clamp(1.1rem, 3vw, 1.5rem);
+  line-height: 1.25;
+}
+
+.timeline-close {
+  flex: 0 0 2.75rem;
+  padding: 0;
+  font-size: 1.5rem;
+}
+
+.timeline-versions {
+  display: flex;
+  gap: .5rem;
+  margin-bottom: 1.25rem;
+}
+
+.timeline-versions button[aria-pressed="true"] {
+  border-color: var(--brand-hi);
+  background: var(--panel-2);
+}
+
+.timeline-detail {
+  overflow: auto;
+  color-scheme: dark;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #1f1f1f;
+  overscroll-behavior-x: contain;
+}
+
+.timeline-detail img {
+  display: block;
+  width: 2000px;
+  max-width: none;
+  height: auto;
+}
+
+@media (max-width: 760px) {
+  .stage {
+    height: auto;
+  }
+
+  .stage-pin {
+    position: static;
+    height: auto;
+    padding-block: clamp(4.5rem, 11vh, 8rem);
+  }
+
+  .stage-frame {
+    aspect-ratio: 4 / 3;
+  }
+
+  .stage-img {
+    width: calc(100% * 2000 / 329 * 3 / 4);
+    max-width: none;
+  }
+
+  .stage-img.messy,
+  .stage-frame::after {
+    display: none;
+  }
+
+  .stage-meta {
+    flex-wrap: wrap;
+    gap: .75rem;
+  }
+
+  .stage .clip-text.over {
+    margin-top: 1.5rem;
+    padding: 1.25rem;
+  }
+
+  .timeline-dialog {
+    width: calc(100vw - 1.5rem);
   }
 }
