@@ -29,6 +29,8 @@
   --fs-label: .75rem;
   /* slugs, captions, tags, timecodes */
   --fs-meta: .8125rem;
+  --fs-section: clamp(1.9rem, 1.2rem + 2.6vw, 3.4rem);
+  --control-font: 400 var(--fs-label)/1.4 var(--mono);
   /* the running timecode readout */
 
   /* Three letter-spacings, no one-offs. */
@@ -447,7 +449,7 @@ body {
   right: 0;
   bottom: 0;
   padding: 2.5rem .9rem .7rem;
-  font: 400 var(--fs-label)/1.4 var(--mono);
+  font: var(--control-font);
   color: var(--text-2);
   background: linear-gradient(transparent, rgba(7, 6, 11, .88));
 }
@@ -534,7 +536,7 @@ body {
 }
 
 .clip h2 {
-  font-size: clamp(1.9rem, 1.2rem + 2.6vw, 3.4rem);
+  font-size: var(--fs-section);
   margin-bottom: 1.1rem;
 }
 
@@ -767,7 +769,7 @@ body {
 .grade h2 {
   grid-column: 1;
   margin-bottom: 0;
-  font-size: clamp(2.4rem, 1.4rem + 4vw, 5rem);
+  font-size: var(--fs-section);
 }
 
 .grade .clip-text p:not(.slug) {
@@ -956,7 +958,7 @@ body {
   background: transparent;
   color: var(--text-2);
   text-align: left;
-  font: 400 var(--fs-label)/1.4 var(--mono);
+  font: var(--control-font);
   cursor: pointer;
 }
 
@@ -1033,7 +1035,7 @@ body {
   padding: .65rem 1rem;
   color: var(--text);
   background: var(--panel-2);
-  font: 400 var(--fs-label)/1.4 var(--mono);
+  font: var(--control-font);
   cursor: pointer;
 }
 
@@ -1118,8 +1120,8 @@ body {
 }
 
 .apps>li {
-  font-weight: 800;
-  font-size: clamp(1.2rem, .7rem + 2vw, 2.25rem);
+  font-weight: 600;
+  font-size: clamp(1.15rem, 1rem + .7vw, 1.65rem);
   letter-spacing: var(--track-head);
   line-height: 1.1;
 }
@@ -1625,7 +1627,7 @@ body {
   border-radius: 4px;
   background: var(--panel);
   color: var(--text);
-  font: 500 .875rem/1.4 var(--sans);
+  font: var(--control-font);
   text-decoration: none;
 }
 
@@ -1882,7 +1884,7 @@ html.timeline-open {
   min-height: 2.75rem;
   padding: .55rem .5rem;
   color: var(--text-2);
-  font: 500 .875rem/1.4 var(--sans);
+  font: var(--control-font);
   text-decoration: none;
 }
 
@@ -1922,4 +1924,8 @@ html.timeline-open {
     font-size: var(--fs-label);
     font-weight: 400;
   }
+}
+
+.selected-work > .clip-text h2 {
+  font-size: clamp(2.4rem, 1.8rem + 3vw, 4.25rem);
 }
