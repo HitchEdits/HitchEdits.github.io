@@ -89,9 +89,14 @@ Discord, iMessage, X, etc. The `og:image` tag in `index.html` uses the full URL
 `https://hitchedits.github.io/images/og.jpg`. If the site moves to a custom
 domain, update that URL and `og:url`.
 
-## Selected work
+## Editing examples
 
-The first project is featured; two supporting projects follow it. Fill in each
-project's title, type, role and contribution in `index.html`. The first two
-preview slots accept YouTube IDs; the third accepts a still image. These fields
-remain bracketed while the portfolio content is in progress.
+The portfolio follows the planned assets rather than requiring project case
+studies. Set the Agile slot's `data-video` to the compressed editing timelapse.
+Set the Adaptable slot's `data-video` to the short motion graphic. Use a relative
+MP4 or WebM path, such as `videos/timelapse.mp4`. Empty slots stay available while
+the exports are in progress.
+
+The timelapse uses manual playback. The motion graphic loops muted, with native
+playback controls; reduced-motion visitors get manual playback. The showreel
+continues to use its YouTube ID, and the existing WAV comparison remains manual.

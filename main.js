@@ -524,3 +524,18 @@ if (timelineDialog && timelineExpand) {
     viewButtons.forEach(item => item.setAttribute("aria-pressed", String(item === button)));
   }));
 }
+
+// The timelapse plays on request; the short motion graphic can loop silently.
+document.querySelectorAll(".media[data-video]").forEach(slot => {
+  if (!slot.dataset.video) return;
+  const video = document.createElement("video");
+  video.src = slot.dataset.video;
+  video.controls = true;
+  video.playsInline = true;
+  video.muted = true;
+  video.preload = "metadata";
+  video.loop = slot.dataset.playback === "loop";
+  video.autoplay = video.loop && !reduceMotion.matches;
+  video.setAttribute("aria-label", slot.getAttribute("aria-label") || "Video sample");
+  slot.appendChild(video);
+});
