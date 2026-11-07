@@ -1107,6 +1107,7 @@ body {
   max-width: 62rem;
   text-align: center;
   padding-block: clamp(6rem, 16vh, 11rem);
+  padding-bottom: clamp(3rem, 8vh, 5.5rem);
 }
 
 .tools .clip-text p:not(.slug) {
@@ -1902,4 +1903,9 @@ html.timeline-open {
 .apps ul li + li::before {
   content: "|";
   margin-right: .9rem;
+}
+
+.grade,
+.audio-section {
+  padding-top: clamp(6rem, 15vh, 11rem);
 }
