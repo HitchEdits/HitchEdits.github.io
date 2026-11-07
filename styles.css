@@ -1906,3 +1906,20 @@ html.timeline-open {
 #contact {
   scroll-margin-top: 1.5rem;
 }
+
+@media (max-width: 760px) {
+  .mcam .mclip {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .mcam .mclip em,
+  .mcam-angle {
+    display: none;
+  }
+
+  .mcam .mclip b {
+    font-family: var(--mono);
+    font-size: var(--fs-label);
+    font-weight: 400;
+  }
+}
