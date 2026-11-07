@@ -626,6 +626,12 @@ if (copyEmail) {
   const copyStatus = document.getElementById("copyEmailStatus");
   const email = document.querySelector(".mailto a").getAttribute("href").slice(7);
   let resetCopyLabel;
+  const setCopyState = copied => {
+    copyEmail.classList.toggle("is-copied", copied);
+    const label = copied ? "Email copied" : "Copy email";
+    copyEmail.setAttribute("aria-label", label);
+    copyEmail.title = label;
+  };
   copyEmail.addEventListener("click", async () => {
     clearTimeout(resetCopyLabel);
     copyStatus.textContent = "";
@@ -634,11 +640,11 @@ if (copyEmail) {
     try {
       if (!navigator.clipboard?.writeText) throw new Error("Clipboard unavailable");
       await navigator.clipboard.writeText(email);
-      copyEmail.textContent = "Copied";
+      setCopyState(true);
       copyStatus.textContent = "Email address copied.";
-      resetCopyLabel = setTimeout(() => { copyEmail.textContent = "Copy email"; }, 2200);
+      resetCopyLabel = setTimeout(() => setCopyState(false), 2200);
     } catch {
-      copyEmail.textContent = "Copy email";
+      setCopyState(false);
       copyStatus.textContent = "Couldn't copy. You can select the email address above.";
       copyStatus.classList.remove("sr");
     } finally {
