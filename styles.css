@@ -619,7 +619,7 @@ body {
    scrolling. The pin inside it is all the viewer ever sees. svh keeps the
    pin from jolting when a mobile URL bar shows or hides. */
 .stage {
-  --run: 24svh;
+  --run: 160svh;
   height: calc(100svh + var(--run));
   padding-block: 0;
 }
