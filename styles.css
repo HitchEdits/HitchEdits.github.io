@@ -1104,28 +1104,28 @@ body {
 /* 06: narrow, centred, no media at all */
 /* 06: the one centred section, and the one with no frame. The app names are the image. */
 .tools {
-  max-width: var(--page);
-  text-align: left;
-  padding-block: clamp(3rem, 7vh, 5rem);
+  max-width: 62rem;
+  text-align: center;
+  padding-block: clamp(6rem, 16vh, 11rem);
 }
 
 .tools .clip-text p:not(.slug) {
-  max-width: 50ch;
+  margin-inline: auto;
 }
 
 .apps {
   list-style: none;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
-  gap: clamp(1.5rem, 4vw, 3rem);
+  gap: clamp(2rem, 6vw, 5rem);
   align-items: start;
-  margin: 2rem 0 0;
+  margin: clamp(2rem, 5vw, 3.5rem) 0 0;
   padding: 0;
 }
 
 .apps>li {
-  font-weight: 600;
-  font-size: clamp(1.15rem, 1rem + .7vw, 1.65rem);
+  font-weight: 800;
+  font-size: clamp(1.2rem, .7rem + 2vw, 2.25rem);
   letter-spacing: var(--track-head);
   line-height: 1.1;
 }
@@ -1151,7 +1151,7 @@ body {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
-  justify-content: flex-start;
+  justify-content: center;
   gap: .35rem .9rem;
   margin: .65rem 0 0;
   padding: 0;
@@ -1897,4 +1897,9 @@ html.timeline-open {
   margin: 1rem 0 0;
   color: var(--text-2);
   font: var(--control-font);
+}
+
+.apps ul li + li::before {
+  content: "|";
+  margin-right: .9rem;
 }
