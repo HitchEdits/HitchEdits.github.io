@@ -700,7 +700,7 @@ body {
   position: relative;
   z-index: 2;
   width: min(34rem, 100%);
-  margin: 1.7rem 0 0;
+  margin: 0 0 1.7rem;
   padding: 1.5rem 1.75rem;
   background: rgba(7, 6, 11, .85);
   backdrop-filter: blur(10px);
@@ -1759,7 +1759,7 @@ html.timeline-open {
   }
 
   .stage .clip-text.over {
-    margin-top: 1.5rem;
+    margin: 0 0 1.5rem;
     padding: 1.25rem;
   }
 
