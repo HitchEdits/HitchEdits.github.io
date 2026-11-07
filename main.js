@@ -539,3 +539,84 @@ document.querySelectorAll(".media[data-video]").forEach(slot => {
   video.setAttribute("aria-label", slot.getAttribute("aria-label") || "Video sample");
   slot.appendChild(video);
 });
+
+// Matching silent video exports can use the same before/after wipe as the stills.
+const gradeComparison = document.querySelector(".compare[data-before-video]");
+if (gradeComparison?.dataset.beforeVideo && gradeComparison.dataset.afterVideo) {
+  const gradeFrame = gradeComparison.querySelector(".compare-frame");
+  const stills = [...gradeFrame.querySelectorAll("img")];
+  const makeGradeVideo = (source, className) => {
+    const video = document.createElement("video");
+    video.className = className;
+    video.src = source;
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.preload = "auto";
+    video.setAttribute("aria-hidden", "true");
+    return video;
+  };
+  const beforeVideo = makeGradeVideo(gradeComparison.dataset.beforeVideo, "compare-before");
+  const afterVideo = makeGradeVideo(gradeComparison.dataset.afterVideo, "compare-after");
+  const pair = [beforeVideo, afterVideo];
+  gradeFrame.prepend(afterVideo, beforeVideo);
+  beforeVideo.addEventListener("loadedmetadata", () => {
+    if (beforeVideo.videoWidth && beforeVideo.videoHeight) {
+      gradeFrame.style.aspectRatio = `${beforeVideo.videoWidth} / ${beforeVideo.videoHeight}`;
+    }
+  });
+  stills.forEach(image => { image.hidden = true; });
+
+  const playback = document.createElement("button");
+  playback.type = "button";
+  playback.className = "compare-playback";
+  const feedback = document.createElement("p");
+  feedback.className = "compare-video-status sr";
+  feedback.setAttribute("role", "status");
+  gradeComparison.append(playback, feedback);
+  let playing = false;
+  let playbackRequest = 0;
+  const paintGradePlayback = () => {
+    playback.textContent = playing ? "Pause comparison" : "Play comparison";
+    playback.setAttribute("aria-pressed", String(playing));
+  };
+  const pauseGradePlayback = () => {
+    playing = false;
+    playbackRequest++;
+    pair.forEach(video => video.pause());
+    paintGradePlayback();
+  };
+  const playGradePlayback = async () => {
+    const attempt = ++playbackRequest;
+    playing = true;
+    paintGradePlayback();
+    try {
+      await Promise.all(pair.map(video => video.play()));
+      if (attempt !== playbackRequest && !playing) pair.forEach(video => video.pause());
+    } catch {
+      if (attempt === playbackRequest) pauseGradePlayback();
+    }
+  };
+  playback.addEventListener("click", () => {
+    if (playing) pauseGradePlayback();
+    else playGradePlayback();
+  });
+  beforeVideo.addEventListener("timeupdate", () => {
+    if (playing && afterVideo.readyState >= 1 && Math.abs(beforeVideo.currentTime - afterVideo.currentTime) > .08) {
+      afterVideo.currentTime = beforeVideo.currentTime;
+    }
+  });
+  pair.forEach(video => video.addEventListener("error", () => {
+    pauseGradePlayback();
+    playback.disabled = true;
+    pair.forEach(item => { item.hidden = true; });
+    stills.forEach(image => { image.hidden = false; });
+    feedback.textContent = "Video comparison couldn't load.";
+    feedback.classList.remove("sr");
+  }));
+  reduceMotion.addEventListener("change", () => {
+    if (reduceMotion.matches) pauseGradePlayback();
+  });
+  paintGradePlayback();
+  if (!reduceMotion.matches) playGradePlayback();
+}

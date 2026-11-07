@@ -100,3 +100,11 @@ the exports are in progress.
 The timelapse uses manual playback. The motion graphic loops muted, with native
 playback controls; reduced-motion visitors get manual playback. The showreel
 continues to use its YouTube ID, and the existing WAV comparison remains manual.
+
+## Looping colour comparison
+
+Set `data-before-video` and `data-after-video` on the colour comparison figure
+to the two silent video exports. Use matching frames, dimensions and duration.
+The videos loop muted under the existing slider and share a Play/Pause control.
+Reduced-motion visitors get manual playback. The still-image comparison stays
+active until both video paths are supplied.

@@ -806,7 +806,8 @@ body {
   outline-offset: 3px;
 }
 
-.compare-frame img {
+.compare-frame img,
+.compare-frame video {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -1619,7 +1620,8 @@ body {
 .hero-contact,
 .timeline-expand,
 .timeline-close,
-.timeline-versions button {
+.timeline-versions button,
+.compare-playback {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1637,7 +1639,8 @@ body {
 .hero-contact:hover,
 .timeline-expand:hover,
 .timeline-close:hover,
-.timeline-versions button:hover {
+.timeline-versions button:hover,
+.compare-playback:hover {
   border-color: var(--brand-hi);
 }
 
@@ -1832,4 +1835,14 @@ html.timeline-open {
     grid-template-columns: minmax(0, 1fr);
     gap: 3rem;
   }
+}
+
+.compare-playback {
+  margin-top: .75rem;
+}
+
+.compare-video-status:not(.sr) {
+  margin: .75rem 0 0;
+  color: var(--text-2);
+  font: var(--control-font);
 }
