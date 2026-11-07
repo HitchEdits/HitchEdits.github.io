@@ -1104,9 +1104,6 @@ body {
 /* 06: narrow, centred, no media at all */
 /* 06: the one centred section, and the one with no frame. The app names are the image. */
 .tools {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
   max-width: 62rem;
   text-align: center;
   padding-block: clamp(6rem, 16vh, 11rem);
@@ -1905,10 +1902,4 @@ html.timeline-open {
 .apps ul li + li::before {
   content: "|";
   margin-right: .9rem;
-}
-
-/* Each main topic gets a full-screen chapter, with natural scrolling. */
-.clip:not(.stage) {
-  min-height: 100svh;
-  align-content: center;
 }
