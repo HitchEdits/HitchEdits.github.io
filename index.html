@@ -61,7 +61,6 @@
       <div class="monitor-screen"></div>
     </figure>
 
-    <p class="hero-note">Scroll, or drag the bar below, to scrub the sequence &darr;</p>
   </header>
 
   <main>
@@ -106,54 +105,6 @@
           </div>
         </article>
       </div>
-    </section>
-
-    <!-- 02 pinned stage: the messy cut wipes away to the clean one -->
-    <section class="clip bleed stage" id="clean" data-tc="00:01:04:19">
-      <div class="stage-pin">
-        <div class="stage-frame">
-          <img class="stage-img clean" src="images/cleantimeline.webp" alt="A clean, organised timeline"
-            decoding="async">
-          <img class="stage-img messy" src="images/messytimeline1.webp" alt="A messy, disorganised timeline"
-            decoding="async">
-        </div>
-        <div class="stage-meta">
-          <p class="stage-note">Real Premiere Pro sequences from past edits</p>
-          <button type="button" class="timeline-expand" id="timelineExpand" aria-haspopup="dialog">View full timeline <span aria-hidden="true">&nearr;</span></button>
-        </div>
-        <div class="clip-text over">
-          <p class="slug"><b>V1</b> Clip 02</p>
-          <h2>Clean Editing</h2>
-          <p>that is precise and doesn't distract from your message.</p>
-        </div>
-      </div>
-    </section>
-
-
-    <dialog class="timeline-dialog" id="timelineDialog" aria-labelledby="timelineDialogTitle">
-      <div class="timeline-dialog-top">
-        <h2 id="timelineDialogTitle">Premiere Pro timeline</h2>
-        <button type="button" class="timeline-close" id="timelineClose" aria-label="Close full timeline" autofocus>&times;</button>
-      </div>
-      <div class="timeline-versions" role="group" aria-label="Timeline version">
-        <button type="button" data-timeline-view="messy" aria-pressed="false">Original</button>
-        <button type="button" data-timeline-view="clean" aria-pressed="true">Organised</button>
-      </div>
-      <div class="timeline-detail" tabindex="0" role="region" aria-label="Full-size timeline, scroll horizontally to inspect">
-        <img id="timelineDetailImage" src="images/cleantimeline.webp" alt="Organised Premiere Pro timeline at full size" width="2000" height="329">
-      </div>
-    </dialog>
-
-    <!-- 03 deliberately off the grid, small square still -->
-    <section class="clip offset" id="adaptable" data-tc="00:01:51:02">
-      <div class="clip-text">
-        <p class="slug"><b>V1</b> Clip 03</p>
-        <h2>Adaptable</h2>
-        <p>to your specific needs and preferences.</p>
-      </div>
-      <figure class="media square" data-img="">
-        <figcaption>[Still]</figcaption>
-      </figure>
     </section>
 
     <!-- 04 before/after grade, drag to compare -->
@@ -234,25 +185,65 @@
     <!-- 06 no media, just the two apps -->
     <section class="clip tools" id="tools" data-tc="00:03:58:22">
       <div class="clip-text">
-        <p class="slug"><b>V2</b> Clip 06</p>
-        <h2>Premiere and Resolve</h2>
-        <p>experienced, for your collaboration needs.</p>
+        <p class="slug"><b>WORKFLOW</b> How I work</p>
+        <h2>Workflow and tools</h2>
+        <p>Editing, colour and audio in Premiere Pro and DaVinci Resolve.</p>
       </div>
+      <ul class="capability-list">
+        <li id="agile"><h3>Agile editing</h3><p>Edits planned around your deadline and budget.</p></li>
+        <li id="adaptable"><h3>Adaptable</h3><p>Formats, pacing and revisions shaped around your brief.</p></li>
+      </ul>
       <ul class="apps">
         <li>Adobe Premiere Pro
           <ul>
-            <li>After Effects |</li>
+            <li>After Effects</li>
             <li>Audition</li>
           </ul>
         </li>
         <li>DaVinci Resolve
           <ul>
-            <li>Fusion |</li>
+            <li>Fusion</li>
             <li>Fairlight</li>
           </ul>
         </li>
       </ul>
     </section>
+
+    <!-- 02 pinned stage: the messy cut wipes away to the clean one -->
+    <section class="clip bleed stage" id="clean" data-tc="00:04:22:00">
+      <div class="stage-pin">
+        <div class="stage-frame">
+          <img class="stage-img clean" src="images/cleantimeline.webp" alt="A clean, organised timeline"
+            decoding="async">
+          <img class="stage-img messy" src="images/messytimeline1.webp" alt="A messy, disorganised timeline"
+            decoding="async">
+        </div>
+        <div class="stage-meta">
+          <p class="stage-note">Real Premiere Pro sequences from past edits</p>
+          <button type="button" class="timeline-expand" id="timelineExpand" aria-haspopup="dialog">View full timeline <span aria-hidden="true">&nearr;</span></button>
+        </div>
+        <div class="clip-text over">
+          <p class="slug"><b>V1</b> Clip 02</p>
+          <h2>Clean Editing</h2>
+          <p>that is precise and doesn't distract from your message.</p>
+        </div>
+      </div>
+    </section>
+
+
+    <dialog class="timeline-dialog" id="timelineDialog" aria-labelledby="timelineDialogTitle">
+      <div class="timeline-dialog-top">
+        <h2 id="timelineDialogTitle">Premiere Pro timeline</h2>
+        <button type="button" class="timeline-close" id="timelineClose" aria-label="Close full timeline" autofocus>&times;</button>
+      </div>
+      <div class="timeline-versions" role="group" aria-label="Timeline version">
+        <button type="button" data-timeline-view="messy" aria-pressed="false">Original</button>
+        <button type="button" data-timeline-view="clean" aria-pressed="true">Organised</button>
+      </div>
+      <div class="timeline-detail" tabindex="0" role="region" aria-label="Full-size timeline, scroll horizontally to inspect">
+        <img id="timelineDetailImage" src="images/cleantimeline.webp" alt="Organised Premiere Pro timeline at full size" width="2000" height="329">
+      </div>
+    </dialog>
 
     <!-- 07 sync diagram, no media needed -->
     <section class="clip multicam" id="multicam" data-tc="00:04:44:15">

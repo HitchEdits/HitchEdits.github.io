@@ -513,7 +513,7 @@ body {
 .clip {
   max-width: var(--page);
   margin: 0 auto;
-  padding: clamp(4.5rem, 11vh, 8rem) var(--pad);
+  padding: clamp(3rem, 7vh, 5rem) var(--pad);
 }
 
 .slug {
@@ -614,7 +614,7 @@ body {
    scrolling. The pin inside it is all the viewer ever sees. svh keeps the
    pin from jolting when a mobile URL bar shows or hides. */
 .stage {
-  --run: 40svh;
+  --run: 24svh;
   height: calc(100svh + var(--run));
   padding-block: 0;
 }
@@ -1098,22 +1098,22 @@ body {
 /* 06: narrow, centred, no media at all */
 /* 06: the one centred section, and the one with no frame. The app names are the image. */
 .tools {
-  max-width: 62rem;
-  text-align: center;
-  padding-block: clamp(6rem, 16vh, 11rem);
+  max-width: var(--page);
+  text-align: left;
+  padding-block: clamp(3rem, 7vh, 5rem);
 }
 
 .tools .clip-text p:not(.slug) {
-  margin-inline: auto;
+  max-width: 50ch;
 }
 
 .apps {
   list-style: none;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
-  gap: clamp(2rem, 6vw, 5rem);
+  gap: clamp(1.5rem, 4vw, 3rem);
   align-items: start;
-  margin: clamp(2rem, 5vw, 3.5rem) 0 0;
+  margin: 2rem 0 0;
   padding: 0;
 }
 
@@ -1145,7 +1145,7 @@ body {
   list-style: none;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
   gap: .35rem .9rem;
   margin: .65rem 0 0;
   padding: 0;
@@ -1837,5 +1837,39 @@ html.timeline-open {
 
   .project-featured {
     gap: 1.25rem;
+  }
+}
+
+.selected-work {
+  padding-block: clamp(4rem, 8vh, 6rem);
+}
+
+.capability-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+  list-style: none;
+  margin: 1.75rem 0 0;
+  padding: 1.5rem 0;
+  border-block: 1px solid var(--line);
+}
+
+.capability-list h3 {
+  margin: 0 0 .5rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.capability-list p {
+  max-width: 40ch;
+  margin: 0;
+  color: var(--text-2);
+  font-size: 1rem;
+}
+
+@media (max-width: 480px) {
+  .capability-list {
+    grid-template-columns: minmax(0, 1fr);
   }
 }
