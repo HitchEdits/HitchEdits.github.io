@@ -67,11 +67,67 @@
 
   <main>
 
-    <section class="clip editing-samples" id="editing" data-tc="00:00:22:11" data-name="Editing" aria-label="Editing examples">
+    <section class="clip tools" id="tools" data-tc="00:00:22:11">
+      <div class="clip-text">
+        <p class="slug"><b>V2</b> Clip 06</p>
+        <h2>Premiere and Resolve</h2>
+        <p>experienced, for your collaboration needs.</p>
+      </div>
+      <ul class="apps">
+        <li>Adobe Premiere Pro
+          <ul>
+            <li>After Effects</li>
+            <li>Audition</li>
+          </ul>
+        </li>
+        <li>DaVinci Resolve
+          <ul>
+            <li>Fusion</li>
+            <li>Fairlight</li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+
+    <section class="clip bleed stage" id="clean" data-tc="00:01:04:19">
+      <div class="stage-pin">
+        <div class="stage-frame">
+          <img class="stage-img clean" src="images/cleantimeline.webp" alt="A clean, organised timeline"
+            decoding="async">
+          <img class="stage-img messy" src="images/messytimeline1.webp" alt="A messy, disorganised timeline"
+            decoding="async">
+        </div>
+        <div class="stage-meta">
+          <p class="stage-note">Real Premiere Pro sequences from past edits</p>
+          <button type="button" class="timeline-expand" id="timelineExpand" aria-haspopup="dialog">View full timeline <svg class="expand-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 2H2v4m8-4h4v4M2 10v4h4m8-4v4h-4" /></svg></button>
+        </div>
+        <div class="clip-text over">
+          <p class="slug"><b>V1</b> Clip 02</p>
+          <h2>Clean Editing</h2>
+          <p>that is precise and doesn't distract from your message.</p>
+        </div>
+      </div>
+    </section>
+
+    <dialog class="timeline-dialog" id="timelineDialog" aria-labelledby="timelineDialogTitle">
+      <div class="timeline-dialog-top">
+        <h2 id="timelineDialogTitle">Premiere Pro timeline</h2>
+        <button type="button" class="timeline-close" id="timelineClose" aria-label="Close full timeline" autofocus>&times;</button>
+      </div>
+      <div class="timeline-versions" role="group" aria-label="Timeline version">
+        <button type="button" data-timeline-view="messy" aria-pressed="false">Original</button>
+        <button type="button" data-timeline-view="clean" aria-pressed="true">Organised</button>
+      </div>
+      <div class="timeline-detail" tabindex="0" role="region" aria-label="Full-size timeline, scroll horizontally to inspect">
+        <img id="timelineDetailImage" src="images/cleantimeline.webp" alt="Organised Premiere Pro timeline at full size" width="2000" height="329">
+      </div>
+    </dialog>
+
+    <section class="clip editing-samples" id="editing" data-tc="00:01:51:02" data-name="Editing" aria-label="Editing examples">
       <article class="editing-sample" id="agile">
         <div class="clip-text">
           <p class="slug"><b>V1</b> Timelapse</p>
-          <h2>Agile Editing</h2>
+          <h2>Agile</h2>
           <p>that meets your deadlines and works within your budget.</p>
         </div>
         <figure class="media" data-video="" data-playback="manual" aria-label="Editing timelapse"></figure>
@@ -86,11 +142,10 @@
       </article>
     </section>
 
-    <!-- 04 before/after grade, drag to compare -->
     <section class="clip grade" id="color" data-tc="00:02:30:00">
       <div class="clip-text">
         <p class="slug"><b>V1</b> Clip 04</p>
-        <h2>Color Correction</h2>
+        <h2>Color Corrections</h2>
         <p>to work with <em>any</em> footage.</p>
       </div>
 
@@ -156,71 +211,11 @@
       </figure>
       <div class="clip-text">
         <p class="slug"><b>A1</b> Clip 05</p>
-        <h2>Audio Editing</h2>
+        <h2>Audio Experienced</h2>
         <p>so your video both looks and sounds great.</p>
       </div>
     </section>
 
-    <!-- 06 no media, just the two apps -->
-    <section class="clip tools" id="tools" data-tc="00:03:58:22">
-      <div class="clip-text">
-        <p class="slug"><b>V2</b> Clip 06</p>
-        <h2>Premiere and Resolve</h2>
-        <p>experienced, for your collaboration needs.</p>
-      </div>
-      <ul class="apps">
-        <li>Adobe Premiere Pro
-          <ul>
-            <li>After Effects</li>
-            <li>Audition</li>
-          </ul>
-        </li>
-        <li>DaVinci Resolve
-          <ul>
-            <li>Fusion</li>
-            <li>Fairlight</li>
-          </ul>
-        </li>
-      </ul>
-    </section>
-
-    <!-- 02 pinned stage: the messy cut wipes away to the clean one -->
-    <section class="clip bleed stage" id="clean" data-tc="00:04:22:00">
-      <div class="stage-pin">
-        <div class="stage-frame">
-          <img class="stage-img clean" src="images/cleantimeline.webp" alt="A clean, organised timeline"
-            decoding="async">
-          <img class="stage-img messy" src="images/messytimeline1.webp" alt="A messy, disorganised timeline"
-            decoding="async">
-        </div>
-        <div class="stage-meta">
-          <p class="stage-note">Real Premiere Pro sequences from past edits</p>
-          <button type="button" class="timeline-expand" id="timelineExpand" aria-haspopup="dialog">View full timeline <svg class="expand-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M6 2H2v4m8-4h4v4M2 10v4h4m8-4v4h-4" /></svg></button>
-        </div>
-        <div class="clip-text over">
-          <p class="slug"><b>V1</b> Clip 02</p>
-          <h2>Clean Editing</h2>
-          <p>that is precise and doesn't distract from your message.</p>
-        </div>
-      </div>
-    </section>
-
-
-    <dialog class="timeline-dialog" id="timelineDialog" aria-labelledby="timelineDialogTitle">
-      <div class="timeline-dialog-top">
-        <h2 id="timelineDialogTitle">Premiere Pro timeline</h2>
-        <button type="button" class="timeline-close" id="timelineClose" aria-label="Close full timeline" autofocus>&times;</button>
-      </div>
-      <div class="timeline-versions" role="group" aria-label="Timeline version">
-        <button type="button" data-timeline-view="messy" aria-pressed="false">Original</button>
-        <button type="button" data-timeline-view="clean" aria-pressed="true">Organised</button>
-      </div>
-      <div class="timeline-detail" tabindex="0" role="region" aria-label="Full-size timeline, scroll horizontally to inspect">
-        <img id="timelineDetailImage" src="images/cleantimeline.webp" alt="Organised Premiere Pro timeline at full size" width="2000" height="329">
-      </div>
-    </dialog>
-
-    <!-- 07 sync diagram, no media needed -->
     <section class="clip multicam" id="multicam" data-tc="00:04:44:15">
       <div class="clip-text">
         <p class="slug"><b>V1&ndash;V4</b> Clip 07</p>
@@ -246,7 +241,6 @@
       </div>
     </section>
 
-    <!-- About -->
     <section class="about" id="about" data-tc="00:06:18:04" data-name="About">
       <p class="slug"><b>INFO</b> About</p>
       <p>[Paragraph About Myself As A Person]</p>
