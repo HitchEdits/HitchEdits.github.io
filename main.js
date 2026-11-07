@@ -1,4 +1,4 @@
-// HitchEdits: scrub readout, waveform, grade wipe, click-to-load video.
+// HitchEdits portfolio interactions.
 
 const FPS = 24;
 
@@ -240,6 +240,165 @@ document.querySelectorAll(".wave").forEach(wave => {
             rx="1" opacity="${(0.35 + env * 0.5).toFixed(2)}"/>`;
   }).join("");
 });
+
+/* Audio comparison: both files share one transport and play one at a time. */
+const audioPlayer = document.getElementById("audioPlayer");
+if (audioPlayer) {
+  const clips = {
+    original: document.getElementById("audioOriginal"),
+    fixed: document.getElementById("audioFixed")
+  };
+  const buttons = [...audioPlayer.querySelectorAll("[data-audio-version]")];
+  const seekControl = document.getElementById("audioSeek");
+  const playButton = document.getElementById("audioPlay");
+  const playText = document.getElementById("audioPlayText");
+  const currentLabel = document.getElementById("audioCurrent");
+  const durationLabel = document.getElementById("audioDuration");
+  const progress = document.getElementById("audioProgressRect");
+  const status = document.getElementById("audioStatus");
+  const setAudioStatus = (message, isError = false) => {
+    status.textContent = message;
+    status.classList.toggle("sr", !isError);
+  };
+  let version = "original";
+  let active = clips[version];
+  let position = 0;
+  let duration = Number(seekControl.max);
+  let wantsPlayback = false;
+  let request = 0;
+  let animation = 0;
+
+  const clock = seconds => {
+    const whole = Math.max(0, Math.floor(seconds));
+    return `${Math.floor(whole / 60)}:${String(whole % 60).padStart(2, "0")}`;
+  };
+  const paint = () => {
+    const ratio = Math.min(1, Math.max(0, position / duration));
+    seekControl.value = position;
+    seekControl.setAttribute("aria-valuetext", `${clock(position)} of ${clock(duration)}`);
+    currentLabel.textContent = clock(position);
+    durationLabel.textContent = clock(duration);
+    progress.setAttribute("width", ratio * 1000);
+    audioPlayer.style.setProperty("--audio-progress", `${ratio * 100}%`);
+    playButton.setAttribute("aria-pressed", String(wantsPlayback));
+    playButton.setAttribute("aria-label", `${wantsPlayback ? "Pause" : "Play"} ${version} audio`);
+    playText.textContent = wantsPlayback ? "Pause" : "Play";
+  };
+  const stop = () => {
+    wantsPlayback = false;
+    request++;
+    active.pause();
+    cancelAnimationFrame(animation);
+    paint();
+  };
+  const tick = () => {
+    if (!wantsPlayback || active.paused) return;
+    position = Math.min(active.currentTime, duration);
+    if (position >= duration) {
+      stop();
+      setAudioStatus("End of clip.");
+      return;
+    }
+    paint();
+    animation = requestAnimationFrame(tick);
+  };
+  const start = async () => {
+    wantsPlayback = true;
+    const attempt = ++request;
+    const media = active;
+    if (position >= duration - .02) position = 0;
+    paint();
+    setAudioStatus(`Loading ${version} audio…`);
+    try {
+      if (media.readyState < 1) {
+        await new Promise((resolve, reject) => {
+          const cleanup = () => {
+            media.removeEventListener("loadedmetadata", loaded);
+            media.removeEventListener("error", failed);
+          };
+          const loaded = () => { cleanup(); resolve(); };
+          const failed = () => { cleanup(); reject(new Error("Audio unavailable")); };
+          media.addEventListener("loadedmetadata", loaded);
+          media.addEventListener("error", failed);
+          if (media.error) media.load();
+        });
+      }
+      if (attempt !== request) return;
+      media.currentTime = Math.min(position, duration);
+      await media.play();
+      if (attempt !== request) {
+        if (media !== active || !wantsPlayback) media.pause();
+        return;
+      }
+      setAudioStatus(`Playing ${version} audio.`);
+      cancelAnimationFrame(animation);
+      tick();
+    } catch {
+      if (attempt !== request) return;
+      stop();
+      setAudioStatus("Audio couldn't play. Try again or select the other version.", true);
+    }
+  };
+
+  buttons.forEach(button => button.addEventListener("click", () => {
+    const next = button.dataset.audioVersion;
+    if (next === version) return;
+    const previous = active;
+    if (previous.readyState >= 1) position = Math.min(previous.currentTime, duration);
+    version = next;
+    active = clips[version];
+    request++;
+    previous.pause();
+    cancelAnimationFrame(animation);
+    if (active.readyState >= 1) active.currentTime = position;
+    buttons.forEach(item => item.setAttribute("aria-pressed", String(item === button)));
+    audioPlayer.querySelectorAll("[data-audio-wave]").forEach(wave => {
+      wave.style.display = wave.dataset.audioWave === version ? "" : "none";
+    });
+    setAudioStatus(`${version === "fixed" ? "Fixed" : "Original"} selected.`);
+    paint();
+    if (wantsPlayback) start();
+  }));
+
+  playButton.addEventListener("click", () => {
+    if (wantsPlayback) {
+      stop();
+      setAudioStatus("Paused.");
+    } else start();
+  });
+  seekControl.addEventListener("input", () => {
+    position = Number(seekControl.value);
+    if (active.readyState >= 1) active.currentTime = position;
+    paint();
+  });
+  Object.values(clips).forEach(media => {
+    media.addEventListener("loadedmetadata", () => {
+      const lengths = Object.values(clips).map(clip => clip.duration).filter(Number.isFinite);
+      if (lengths.length) duration = Math.min(...lengths);
+      seekControl.max = duration;
+      position = Math.min(position, duration);
+      if (media === active) media.currentTime = position;
+      paint();
+    });
+    media.addEventListener("ended", () => {
+      if (media !== active) return;
+      position = duration;
+      stop();
+      setAudioStatus("End of clip.");
+    });
+    media.addEventListener("pause", () => {
+      if (media === active && wantsPlayback && !media.ended) stop();
+    });
+    media.addEventListener("error", () => {
+      if (media !== active) return;
+      stop();
+      setAudioStatus("This audio file couldn't load. Try again or select the other version.", true);
+    });
+  });
+  audioPlayer.querySelector(".audio-interface").hidden = false;
+  audioPlayer.classList.add("is-enhanced");
+  paint();
+}
 
 /* ── Grade wipe ────────────────────────────────────────────── */
 

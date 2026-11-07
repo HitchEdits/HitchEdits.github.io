@@ -8,9 +8,7 @@
   /* subtitles and body copy */
   --dim: #9990AC;
 
-  /* Brand, sampled from images/logo.jpg: magenta top-left, violet bottom-right.
-     The gradient is his logo, so it's used like one: wordmark, playhead, play
-     button, links. Everything else stays neutral and nothing glows. */
+  /* Brand colours from images/logo.jpg. */
   --brand-a: #C0309A;
   --brand-b: #7A3FC0;
   --brand-hi: #D48BE6;
@@ -920,7 +918,7 @@ body {
   margin-top: .75rem;
 }
 
-/* 05: waveform under the copy */
+/* Decorative waveforms in the multicam diagram. */
 .wave {
   display: block;
   width: 100%;
@@ -930,6 +928,192 @@ body {
 
 .wave rect {
   fill: var(--brand-hi);
+}
+
+.audio-player {
+  min-width: 0;
+  margin: 0;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel);
+}
+
+.audio-player [hidden] {
+  display: none;
+}
+
+.audio-player-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  color: var(--dim);
+  font: 400 var(--fs-label)/1.4 var(--mono);
+  letter-spacing: var(--track-mono);
+}
+
+.audio-versions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: .5rem;
+}
+
+.audio-versions button {
+  padding: .8rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-2);
+  text-align: left;
+  font: 600 1rem/1.4 var(--sans);
+  cursor: pointer;
+}
+
+.audio-versions button small {
+  display: block;
+  margin-top: .2rem;
+  font: 400 var(--fs-label)/1.4 var(--mono);
+  color: var(--dim);
+}
+
+.audio-versions button:hover {
+  border-color: var(--dim);
+}
+
+.audio-versions button[aria-pressed="true"] {
+  background: var(--panel-2);
+  border-color: var(--brand-hi);
+  color: var(--text);
+}
+
+.audio-versions button[aria-pressed="true"] small {
+  color: var(--brand-hi);
+}
+
+.audio-waveform {
+  position: relative;
+  height: 6rem;
+  margin-block: 1.75rem;
+  background: linear-gradient(var(--line), var(--line)) center / 100% 1px no-repeat;
+}
+
+.audio-waveform svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.audio-wave-base {
+  fill: #786A8E;
+}
+
+.audio-wave-played {
+  fill: var(--brand-hi);
+}
+
+.audio-playhead {
+  position: absolute;
+  inset: 0 auto 0 var(--audio-progress, 0%);
+  width: 1px;
+  background: var(--text);
+  pointer-events: none;
+}
+
+.audio-waveform input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: ew-resize;
+}
+
+.audio-waveform:has(input:focus-visible) {
+  outline: 2px solid var(--brand-hi);
+  outline-offset: 6px;
+}
+
+.audio-transport {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.audio-play {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .65rem;
+  min-width: 6.5rem;
+  min-height: 2.75rem;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: .65rem 1rem;
+  color: var(--text);
+  background: var(--panel-2);
+  font: 500 .875rem/1.4 var(--sans);
+  cursor: pointer;
+}
+
+.audio-play:hover {
+  border-color: var(--brand-hi);
+}
+
+.audio-play:disabled {
+  opacity: .5;
+  cursor: default;
+}
+
+.audio-play-icon {
+  width: .75rem;
+  height: .85rem;
+  background: currentColor;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+
+.audio-play[aria-pressed="true"] .audio-play-icon {
+  clip-path: polygon(0 0, 33% 0, 33% 100%, 0 100%, 0 0, 67% 0, 100% 0, 100% 100%, 67% 100%, 67% 0);
+}
+
+.audio-time {
+  font: 400 var(--fs-meta)/1.4 var(--mono);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.audio-time-divider,
+#audioDuration {
+  color: var(--dim);
+}
+
+.audio-player figcaption:not(.sr) {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+  color: var(--dim);
+  font: 400 var(--fs-label)/1.6 var(--mono);
+}
+
+.audio-native label {
+  display: block;
+  margin-top: 1rem;
+}
+
+.audio-native audio {
+  display: block;
+  width: 100%;
+  margin-top: .5rem;
+}
+
+.audio-player.is-enhanced .audio-native {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .audio-section .clip-text { order: -1; }
 }
 
 /* 06: narrow, centred, no media at all */
@@ -1425,5 +1609,27 @@ body {
 
   .tracks b {
     flex-basis: 2.25rem;
+  }
+}
+
+/* Purple arrow on mouse devices; timeline controls retain their playhead. */
+@media (any-hover: hover) and (any-pointer: fine) {
+  html {
+    --cursor-arrow: url("images/cursor-purple.png") 11 10, auto;
+    --cursor-arrow: image-set(url("images/cursor-purple.png") 1x, url("images/cursor-purple@2x.png") 2x) 11 10, auto;
+    cursor: var(--cursor-arrow);
+  }
+
+  body,
+  a,
+  button,
+  input,
+  label,
+  .play,
+  .audio-versions button,
+  .audio-play,
+  .audio-waveform input,
+  .compare-frame {
+    cursor: var(--cursor-arrow);
   }
 }

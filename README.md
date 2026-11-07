@@ -5,7 +5,7 @@ serves it as-is.
 
     index.html   content
     styles.css   design
-    main.js      timecode readout, waveform, grade wipe, video loading
+    main.js      timecode readout, audio comparison, grade wipe, video loading
 
 ## Adding a video
 
@@ -19,8 +19,21 @@ Paste it into the `data-yt=""` of whichever slot you want:
 Unlisted videos work. Private ones don't. YouTube blocks those from embedding
 anywhere, so use Unlisted if you don't want them turning up in search.
 
-Nothing loads from YouTube until someone clicks play, so the page stays fast and
-doesn't drop cookies on visitors.
+YouTube thumbnails load for linked videos. The embedded player loads only after
+someone clicks play, using the youtube-nocookie.com domain.
+
+## Audio comparison
+
+The audio section uses `audio/Audio_Example_Original.wav` and
+`audio/Audio_Example_Fixed.wav`. Original and Fixed share the play button and seek
+control; switching versions keeps the current playback position and stops the
+previous version. Both files are stereo 48 kHz WAVs, about 31 seconds each.
+Playback stops at the end of the shorter file.
+
+The waveform paths in `index.html` were measured from these recordings. Update
+them when replacing the audio. They are static, so the browser doesn't need to
+decode both files to draw them. Native audio controls remain available when
+JavaScript is disabled.
 
 ## Adding an image
 
