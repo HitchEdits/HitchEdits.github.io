@@ -60,9 +60,7 @@ as you go.
 Anything in `[square brackets]` is waiting on you:
 
 - the line under the big HitchEdits wordmark
-- `[Clip title]` / `[Still]` captions on each slot
 - `[Paragraph About Myself As A Person]`
-- the email in the footer, in two places: the visible text and the `mailto:`
 
 ## The timecodes
 
@@ -108,3 +106,10 @@ to the two silent video exports. Use matching frames, dimensions and duration.
 The videos loop muted under the existing slider and share a Play/Pause control.
 Reduced-motion visitors get manual playback. The still-image comparison stays
 active until both video paths are supplied.
+
+## Contact
+
+The email link opens the visitor's mail app. Copy email copies that same address
+without opening an app and confirms success. If clipboard access is unavailable,
+the address stays visible and selectable. Update the footer link and its visible
+text together when changing the address.

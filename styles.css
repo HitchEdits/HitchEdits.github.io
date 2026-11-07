@@ -1621,7 +1621,8 @@ body {
 .timeline-expand,
 .timeline-close,
 .timeline-versions button,
-.compare-playback {
+.compare-playback,
+.copy-email {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1640,7 +1641,8 @@ body {
 .timeline-expand:hover,
 .timeline-close:hover,
 .timeline-versions button:hover,
-.compare-playback:hover {
+.compare-playback:hover,
+.copy-email:hover {
   border-color: var(--brand-hi);
 }
 
@@ -1843,6 +1845,23 @@ html.timeline-open {
 
 .compare-video-status:not(.sr) {
   margin: .75rem 0 0;
+  color: var(--text-2);
+  font: var(--control-font);
+}
+
+.contact-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.25rem 2rem;
+}
+
+.copy-email {
+  min-width: 8rem;
+}
+
+.contact-status:not(.sr) {
+  margin: 1rem 0 0;
   color: var(--text-2);
   font: var(--control-font);
 }

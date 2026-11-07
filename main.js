@@ -620,3 +620,29 @@ if (gradeComparison?.dataset.beforeVideo && gradeComparison.dataset.afterVideo) 
   paintGradePlayback();
   if (!reduceMotion.matches) playGradePlayback();
 }
+
+const copyEmail = document.getElementById("copyEmail");
+if (copyEmail) {
+  const copyStatus = document.getElementById("copyEmailStatus");
+  const email = document.querySelector(".mailto a").getAttribute("href").slice(7);
+  let resetCopyLabel;
+  copyEmail.addEventListener("click", async () => {
+    clearTimeout(resetCopyLabel);
+    copyStatus.textContent = "";
+    copyStatus.classList.add("sr");
+    copyEmail.disabled = true;
+    try {
+      if (!navigator.clipboard?.writeText) throw new Error("Clipboard unavailable");
+      await navigator.clipboard.writeText(email);
+      copyEmail.textContent = "Copied";
+      copyStatus.textContent = "Email address copied.";
+      resetCopyLabel = setTimeout(() => { copyEmail.textContent = "Copy email"; }, 2200);
+    } catch {
+      copyEmail.textContent = "Copy email";
+      copyStatus.textContent = "Couldn't copy. You can select the email address above.";
+      copyStatus.classList.remove("sr");
+    } finally {
+      copyEmail.disabled = false;
+    }
+  });
+}
