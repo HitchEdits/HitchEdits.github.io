@@ -956,7 +956,7 @@ body {
   background: transparent;
   color: var(--text-2);
   text-align: left;
-  font: 600 1rem/1.4 var(--sans);
+  font: 400 var(--fs-label)/1.4 var(--mono);
   cursor: pointer;
 }
 
@@ -1033,7 +1033,7 @@ body {
   padding: .65rem 1rem;
   color: var(--text);
   background: var(--panel-2);
-  font: 500 .875rem/1.4 var(--sans);
+  font: 400 var(--fs-label)/1.4 var(--mono);
   cursor: pointer;
 }
 
