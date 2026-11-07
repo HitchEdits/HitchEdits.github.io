@@ -951,7 +951,7 @@ body {
 
 .audio-versions {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: .5rem;
 }
 
@@ -1919,4 +1919,20 @@ html.timeline-open {
 
 .colophon a:hover {
   color: var(--brand-hi);
+}
+
+@media (max-width: 480px) {
+  .audio-versions button {
+    padding-inline: .5rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .audio-versions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .audio-versions button:last-child {
+    grid-column: 1 / -1;
+  }
 }

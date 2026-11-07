@@ -248,12 +248,13 @@ document.querySelectorAll(".wave").forEach(wave => {
   }).join("");
 });
 
-/* Audio comparison: both files share one transport and play one at a time. */
+/* Audio comparison: all recordings share one transport and play one at a time. */
 const audioPlayer = document.getElementById("audioPlayer");
 if (audioPlayer) {
   const clips = {
     original: document.getElementById("audioOriginal"),
-    fixed: document.getElementById("audioFixed")
+    fixed: document.getElementById("audioFixed"),
+    aggressive: document.getElementById("audioAggressive")
   };
   const buttons = [...audioPlayer.querySelectorAll("[data-audio-version]")];
   const seekControl = document.getElementById("audioSeek");
@@ -343,7 +344,7 @@ if (audioPlayer) {
     } catch {
       if (attempt !== request) return;
       stop();
-      setAudioStatus("Audio couldn't play. Try again or select the other version.", true);
+      setAudioStatus("Audio couldn't play. Try again or select another version.", true);
     }
   };
 
@@ -362,7 +363,7 @@ if (audioPlayer) {
     audioPlayer.querySelectorAll("[data-audio-wave]").forEach(wave => {
       wave.style.display = wave.dataset.audioWave === version ? "" : "none";
     });
-    setAudioStatus(`${version === "fixed" ? "Fixed" : "Original"} selected.`);
+    setAudioStatus(`${button.textContent.trim()} selected.`);
     paint();
     if (wantsPlayback) start();
   }));
@@ -399,7 +400,7 @@ if (audioPlayer) {
     media.addEventListener("error", () => {
       if (media !== active) return;
       stop();
-      setAudioStatus("This audio file couldn't load. Try again or select the other version.", true);
+      setAudioStatus("This audio file couldn't load. Try again or select another version.", true);
     });
   });
   audioPlayer.querySelector(".audio-interface").hidden = false;
