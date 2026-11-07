@@ -1755,3 +1755,87 @@ html.timeline-open {
     width: calc(100vw - 1.5rem);
   }
 }
+
+/* Selected work gives one lead project and two supporting projects. */
+.work-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(2.5rem, 5vw, 4rem) clamp(1.5rem, 4vw, 3rem);
+  margin-top: clamp(1.75rem, 4vw, 3rem);
+}
+
+.project {
+  min-width: 0;
+}
+
+.project-featured {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, .8fr);
+  gap: clamp(1.5rem, 4vw, 3rem);
+  align-items: center;
+  padding-bottom: clamp(2rem, 4vw, 3rem);
+  border-bottom: 1px solid var(--line);
+}
+
+.project-info {
+  padding-top: 1.25rem;
+}
+
+.project-featured .project-info {
+  padding-top: 0;
+}
+
+.project-number {
+  margin-bottom: .75rem;
+  color: var(--dim);
+  font: 400 var(--fs-label)/1.5 var(--mono);
+  letter-spacing: var(--track-mono);
+}
+
+.project h3 {
+  margin: 0 0 1rem;
+  font-size: clamp(1.4rem, 1.05rem + 1vw, 2rem);
+  font-weight: 600;
+  line-height: 1.15;
+  letter-spacing: var(--track-head);
+}
+
+.project-credits {
+  margin: 0 0 .75rem;
+  font: 400 var(--fs-label)/1.6 var(--mono);
+}
+
+.project-credits div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+
+.project-credits dt {
+  color: var(--dim);
+}
+
+.project-credits dd {
+  margin: 0;
+  color: var(--text-2);
+}
+
+.project-contribution {
+  max-width: 45ch;
+  margin: 0;
+  color: var(--text-2);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 760px) {
+  .work-grid,
+  .project-featured {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .project-featured {
+    gap: 1.25rem;
+  }
+}

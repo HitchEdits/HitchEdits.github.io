@@ -88,3 +88,10 @@ the same path whenever one is available.
 Discord, iMessage, X, etc. The `og:image` tag in `index.html` uses the full URL
 `https://hitchedits.github.io/images/og.jpg`. If the site moves to a custom
 domain, update that URL and `og:url`.
+
+## Selected work
+
+The first project is featured; two supporting projects follow it. Fill in each
+project's title, type, role and contribution in `index.html`. The first two
+preview slots accept YouTube IDs; the third accepts a still image. These fields
+remain bracketed while the portfolio content is in progress.
