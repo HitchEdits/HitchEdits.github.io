@@ -1911,3 +1911,12 @@ html.timeline-open {
 .audio-section {
   padding-top: clamp(6rem, 15vh, 11rem);
 }
+
+.colophon a {
+  text-decoration: underline;
+  text-underline-offset: .2em;
+}
+
+.colophon a:hover {
+  color: var(--brand-hi);
+}

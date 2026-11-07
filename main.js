@@ -484,8 +484,6 @@ document.querySelectorAll("[data-yt]").forEach(el => {
   mount.appendChild(btn);
 });
 
-document.getElementById("year").textContent = new Date().getFullYear();
-
 // Fonts shift layout, so re-measure once they land.
 measure(); draw();
 if (document.fonts) document.fonts.ready.then(() => { measure(); draw(); });
